@@ -1,6 +1,6 @@
 # exmg-paper-token-input
 
-Paper style token input element. Please visit the [API Documentation and demo](http://exmg.github.io/exmg-paper-token-input/) page for more information.
+Paper style token input element. Please visit the [API Documentation and demo](http://exmgelements.github.io/exmg-paper-token-input/) page for more information.
 
 ## Usage
 
