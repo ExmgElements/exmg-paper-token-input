@@ -169,7 +169,8 @@
       *
       * @event iron-select
       */
-     /**
+
+      /**
       * Fired when an item is deselected
       *
       * @event iron-deselect
@@ -321,20 +322,18 @@
       _handleClick(e) {
         const inside = e.path.find((path) => path === this);
         // Detect outside element click for auto validate input
-        if(this.autoValidate && !inside && this.previousInsideClick) {
+        if (this.autoValidate && !inside && this.previousInsideClick) {
           this.validate();
         }
         this.previousInsideClick = inside;
       }
       _observeSelectedItems(c) {
-        const _tokens = this.selectedItems.map((si) => {
-          return {
-            id: this.attrForSelected ? si.getAttribute(this.attrForSelected) : this.indexOf(si),
-            text: this.selectedItemSelector ? si.querySelector(this.selectedItemSelector).textContent
-              : si.textContent,
-          };
-        });
-        this.set('_tokens', _tokens);
+        this.set('_tokens', this.selectedItems.map((si) => {
+          const id = this.attrForSelected ? si.getAttribute(this.attrForSelected) : this.indexOf(si);
+          const text = this.selectedItemSelector ? si.querySelector(this.selectedItemSelector).textContent
+            : si.textContent;
+          return {id, text};
+        }));
       }
       _observeInputChange() {
         this.$.inputValue.style.width = (this.$.inputWidthHelper.offsetWidth + 10) + 'px';
@@ -363,19 +362,19 @@
         this.$.inputWidthHelper.style['white-space'] = 'pre';
 
         this.$.inputValue.addEventListener('keydown', this._boundKeyDown);
-        if(this.autoValidate) {
+        if (this.autoValidate) {
           window.addEventListener('click', this._boundOutsideClick);
         }
       }
       disconnectCallback() {
         this.$.inputValue.removeEventListener('keydown', this._boundKeyDown);
-        if(this.autoValidate) {
-          window.removeventListener('click', this._boundOutsideClick);
+        if (this.autoValidate) {
+          window.removeEventListener('click', this._boundOutsideClick);
         }
       }
       _handleKeyDown(e) {
         this._inputValue = this._inputValue || '';
-        switch(e.keyCode) {
+        switch (e.keyCode) {
           case BACKSPACE:
             this.splice('selectedValues', this.selectedValues.length - 1, 1);
             this.focus();
@@ -424,7 +423,7 @@
       }
 
       _handleAddToken(e) {
-        if(this.maxTokens && this.selectedItems.length > this.maxTokens) {
+        if (this.maxTokens && this.selectedItems.length > this.maxTokens) {
           e.stopPropagation();
           this.splice('selectedValues', this.selectedValues.length - 1, 1);
         }
@@ -432,7 +431,7 @@
       }
 
       _resetInput() {
-        if(this.autoValidate) {
+        if (this.autoValidate) {
           this.validate();
         }
         this._inputValue = '';
@@ -445,7 +444,6 @@
       */
       validate() {
         this.invalid = this.required && !this._hasSelectedItems();
-        this.dispatchEvent(new CustomEvent('iron-input-validate', { bubbles: true, composed: true }));
         return !this.invalid;
       }
     }
