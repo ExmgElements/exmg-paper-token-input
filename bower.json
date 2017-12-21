@@ -9,7 +9,7 @@
   "homepage": "http://exmg.github.io/ExmgElements/exmg-paper-token-input/",
   "repository": {
     "type": "git",
-    "url": "git://github.com/exmg/exmg-paper-token-input.git"
+    "url": "git://github.com/ExmgElements/exmg-paper-token-input.git"
   },
   "keywords": [
     "web-components",
