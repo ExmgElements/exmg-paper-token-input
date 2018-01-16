@@ -1,0 +1,29 @@
+{
+  "rules": {
+    "no-unused-vars": 0
+  },
+  "globals": {
+    "assert": false,
+    "sinon": false,
+    "suite": false,
+    "setup": false,
+    "teardown": false,
+    "test": false,
+    "WCT": false,
+    "getItemArray": false,
+    "before": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "describe": false,
+    "expect": false,
+    "it": false,
+    "fixture": false,
+    "fireMousedownMouseupClick": false,
+    "System": false,
+    "HTMLImports": false,
+    "MockInteractions": false,
+    "MockTouchInteractions": false,
+    "touchDevice": false,
+    "_fixture": false
+  }
+}

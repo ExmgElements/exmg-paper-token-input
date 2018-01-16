@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+  <title>exmg-swagger-client-config</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
+  <link rel="import" href="../exmg-paper-token-input.html">
+</head>
+<body>
+  <test-fixture id="BasicRequest">
+    <template>
+      <exmg-paper-token-input></exmg-paper-token-input>
+    </template>
+  </test-fixture>
+  <script>
+    suite('<exmg-paper-token-input>', _ => {
+      let fixtureNodes;
+
+      const timePasses = (ms) => {
+        return new Promise((resolve) => {
+          window.setTimeout(_ => {
+            resolve();
+          }, ms);
+        });
+      };
+
+      setup(function() {
+        fixtureNodes = fixture('BasicRequest');
+      });
+
+      teardown(function() {
+
+      });
+
+      suite('basic usage', _ => {
+        test('Test basic api pet list call', function(done) {
+          timePasses(100).then(_ => {
+            done();
+          });
+        });
+      });
+
+    });
+  </script>
+
+</body>
+</html>
