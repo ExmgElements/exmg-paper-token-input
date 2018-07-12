@@ -374,7 +374,8 @@
           window.addEventListener('click', this._boundOutsideClick);
         }
       }
-      disconnectCallback() {
+      disconnectedCallback() {
+        super.disconnectedCallback();
         this.$.inputValue.removeEventListener('keydown', this._boundKeyDown);
         if (this.autoValidate) {
           window.removeEventListener('click', this._boundOutsideClick);

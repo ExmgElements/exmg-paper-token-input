@@ -15,12 +15,12 @@
   ],
   "author": "Ex Machina",
   "devDependencies": {
-    "bower": "latest",
-    "eslint": "^4.11.0",
+    "bower": "^1.8.4",
+    "eslint": "^4.19.1",
     "eslint-config-exmg": "latest",
     "eslint-plugin-html": "^3.0.0",
-    "polymer-cli": "^1.2.0",
-    "web-component-tester": "^6.4.1"
+    "polymer-cli": "^1.6.0",
+    "web-component-tester": "^6.5.0"
   },
   "homepage": "https://github.com/ExmgElements/",
   "scripts": {
