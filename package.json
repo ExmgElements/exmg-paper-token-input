@@ -1,5 +1,5 @@
 {
-  "name": "exmg-paper-token-input",
+  "name": "@exmg/exmg-paper-token-input",
   "private": true,
   "description": "Paper style token input element",
   "main": "exmg-paper-token-input.html",
