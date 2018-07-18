@@ -6,20 +6,19 @@
 
     <title>exmg-paper-token-input demo</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../paper-item/paper-item.html">
-    <link rel="import" href="../../paper-item/paper-item-body.html">
-    <link rel="import" href="../../paper-item/paper-icon-item.html">
+    <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+    <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-snippet.js"></script>
+    <script type="module" src="../node_modules/@polymer/paper-item/paper-item.js"></script>
+    <script type="module" src="../node_modules/@polymer/paper-item/paper-item-body.js"></script>
+    <script type="module" src="../node_modules/@polymer/paper-item/paper-icon-item.js"></script>
 
-    <link rel="import" href="../exmg-paper-token-input.html">
+    <script type="module" src="../exmg-paper-token-input.js"></script>
 
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>
+    <!-- Ensure Web Animations polyfill is loaded -->
+    <script src="../node_modules/web-animations-js/web-animations-next-lite.min.js"></script>
+
   </head>
   <body>
     <div class="vertical-section-container centered">
@@ -39,7 +38,7 @@
             <paper-item>Evonne</paper-item>
           </exmg-paper-token-input>
 
-          <exmg-paper-token-input label="Select Users" always-float-label attr-for-selected="data-id" selected-values='[9512]'>
+          <exmg-paper-token-input label="Select Users" always-float-label="" attr-for-selected="data-id" selected-values="[9512]">
             <paper-item data-id="4337">Rubin</paper-item>
             <paper-item data-id="7534">Gennie</paper-item>
             <paper-item data-id="2681">Ronna</paper-item>
@@ -78,23 +77,23 @@
           <exmg-paper-token-input label="Select Users" attr-for-selected="data-id" selected-item-selector="div.name">
             <paper-icon-item data-id="222452">
               <iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/cepreygolubev/73.jpg" slot="item-icon"></iron-icon>
-              <paper-item-body two-line>
+              <paper-item-body two-line="">
                 <div class="name">Piet</div>
-                <div secondary>(901) 504-3233</div>
+                <div secondary="">(901) 504-3233</div>
               </paper-item-body>
             </paper-icon-item>
             <paper-icon-item data-id="622459">
               <iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/sebasribas/73.jpg" slot="item-icon"></iron-icon>
-              <paper-item-body two-line>
+              <paper-item-body two-line="">
                 <div class="name">Jesse</div>
-                <div secondary>(901) 504-3233</div>
+                <div secondary="">(901) 504-3233</div>
               </paper-item-body>
             </paper-icon-item>
             <paper-icon-item data-id="922462">
               <iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/dnevozhai/73.jpg" slot="item-icon"></iron-icon>
-              <paper-item-body two-line>
+              <paper-item-body two-line="">
                 <div class="name">Mark</div>
-                <div secondary>(901) 504-3233</div>
+                <div secondary="">(901) 504-3233</div>
               </paper-item-body>
             </paper-icon-item>
           </exmg-paper-token-input>
@@ -104,12 +103,12 @@
       <h3>Example Required/Disabled</h3>
       <demo-snippet>
         <template>
-          <exmg-paper-token-input label="Select Users" required auto-validate error-message="Input required">
+          <exmg-paper-token-input label="Select Users" required="" auto-validate="" error-message="Input required">
             <paper-item>Rubin</paper-item>
             <paper-item>Gennie</paper-item>
             <paper-item>Ronna</paper-item>
           </exmg-paper-token-input>
-          <exmg-paper-token-input label="Select Users" disabled>
+          <exmg-paper-token-input label="Select Users" disabled="">
             <paper-item>Rubin</paper-item>
             <paper-item>Gennie</paper-item>
             <paper-item>Ronna</paper-item>

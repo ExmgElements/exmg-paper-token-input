@@ -25,14 +25,6 @@ In the following example the users id will be used as selection value instead of
 </exmg-paper-token-input>
 ```
 
-## Install
-
-Install the component using bower
-
-```
-$ bower install --save ExmgElements/exmg-paper-token-input
-```
-
 ## Development
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run polymer server to launch the demo page.

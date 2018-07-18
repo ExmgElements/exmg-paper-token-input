@@ -1,31 +1,58 @@
 {
   "name": "@exmg/exmg-paper-token-input",
-  "private": true,
+  "flat": true,
+  "version": "3.0.1",
   "description": "Paper style token input element",
-  "main": "exmg-paper-token-input.html",
-  "repository": "ExmgElements/exmg-paper-token-input",
-  "keywords": [
-    "Exmg",
-    "ExmgElements",
-    "exmg-paper-token-input",
-    "token",
-    "badge",
-    "Polymer",
-    "Input"
+  "contributors": [
+    "Ex Machina"
   ],
-  "author": "Ex Machina",
+  "keywords": [
+    "web-components",
+    "polymer",
+    "paper",
+    "token",
+    "input"
+  ],
+  "main": "exmg-paper-token-input.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ExmgElements/exmg-paper-token-input.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@polymer/iron-flex-layout": "^3.0.0-pre.1",
+    "@polymer/iron-input": "^3.0.0-pre.1",
+    "@polymer/paper-button": "^3.0.0-pre.1",
+    "@polymer/paper-icon-button": "^3.0.0-pre.1",
+    "@polymer/paper-input": "^3.0.0-pre.1",
+    "@polymer/paper-listbox": "^3.0.0-pre.1",
+    "@polymer/paper-menu-button": "^3.0.0-pre.1",
+    "@polymer/paper-item": "^3.0.0-pre.1",
+    "@polymer/paper-dropdown-menu": "^3.0.0-pre.1",
+    "@polymer/iron-iconset-svg": "^3.0.0-pre.1",
+    "@polymer/paper-styles": "^3.0.0-pre.1",
+    "@polymer/polymer": "^3.0.0"
+  },
   "devDependencies": {
-    "bower": "^1.8.4",
-    "eslint": "^4.19.1",
+    "@polymer/iron-component-page": "^3.0.0-pre.19",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
+    "@polymer/paper-item": "^3.0.0-pre.1",
+    "eslint": "^4.11.0",
     "eslint-config-exmg": "latest",
     "eslint-plugin-html": "^3.0.0",
-    "polymer-cli": "^1.6.0",
-    "web-component-tester": "^6.5.0"
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.0",
+    "web-animations-js": "^2.3.1"
   },
-  "homepage": "https://github.com/ExmgElements/",
+  "resolutions": {
+    "type-detect": "1.0.0",
+    "supports-color": "3.1.2",
+    "inherits": "2.0.3",
+    "samsam": "1.1.2"
+  },
   "scripts": {
-    "lint": "polymer lint --rules polymer-2 --input *.html",
+    "lint": "polymer lint --rules polymer-3 --input *.js",
     "eslint": "eslint . --ext js,html --ignore-path .gitignore",
-    "analyze": "polymer analyze --input exmg-paper-token-input.html > analysis.json"
+    "analyze": "polymer analyze > analysis.json"
   }
 }
