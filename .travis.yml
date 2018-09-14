@@ -8,6 +8,7 @@ cache:
 
 install:
 - npm install
+- npm i bower
 - npm i polymer-cli
 
 before_script:
