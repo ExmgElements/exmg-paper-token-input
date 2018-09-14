@@ -2,19 +2,18 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-item/paper-item.js';
 import '@polymer/iron-input/iron-input.js';
-import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-input/paper-input-error.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input-container.js';
 import '@polymer/paper-styles/paper-styles.js';
 import './exmg-paper-token-input-icons.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
 
 const BACKSPACE = 8;
 const ARROWDOWN = 40;
+
 /**
  * `exmg-paper-token-input` is an paper style token input element"
  *
@@ -46,7 +45,8 @@ const ARROWDOWN = 40;
  * @extends Polymer.Element
  * @summary Token input
  */
-class TokenInputElement extends PolymerElement {
+
+export class TokenInputElement extends PolymerElement {
   static get template() {
     return html`
       <style>
@@ -139,9 +139,7 @@ class TokenInputElement extends PolymerElement {
         <paper-listbox id="listbox" selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])" attr-for-selected="{{attrForSelected}}" slot="dropdown-content" selected-items="{{selectedItems}}" selected-values="{{selectedValues}}" on-iron-select="_handleAddToken" on-iron-deselect="_resetInput" multi="">
           <slot></slot>
         </paper-listbox>
-      
-
-    </paper-menu-button>
+      </paper-menu-button>
   `;
   }
 

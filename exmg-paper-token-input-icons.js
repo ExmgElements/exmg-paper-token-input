@@ -1,8 +1,9 @@
+import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-iconset-svg/iron-iconset-svg.js';
-const $_documentContainer = document.createElement('div');
-$_documentContainer.setAttribute('style', 'display: none;');
 
-$_documentContainer.innerHTML = `<iron-iconset-svg name="exmg-paper-token-input-icons" size="24">
+import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+
+const template = html`<iron-iconset-svg name="exmg-paper-token-input-icons" size="24">
 <svg>
   <defs>
     <g id="arrow-drop-down"><path d="M7 10l5 5 5-5z"></path></g>
@@ -11,4 +12,4 @@ $_documentContainer.innerHTML = `<iron-iconset-svg name="exmg-paper-token-input-
 </svg>
 </iron-iconset-svg>`;
 
-document.head.appendChild($_documentContainer);
+document.head.appendChild(template);

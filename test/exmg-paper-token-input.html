@@ -2,12 +2,9 @@
 <html>
 <head>
   <title>exmg-swagger-client-config</title>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
 
-  <script src="@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="web-component-tester/browser.js"></script>
-
-  <script type="module" src="@polymer/polymer/polymer.js"></script>
-  <script type="module" src="@polymer/promise-polyfill/promise-polyfill.js"></script>
   <script type="module" src="../exmg-paper-token-input.js"></script>
 </head>
 <body>
@@ -17,38 +14,36 @@
     </template>
   </test-fixture>
   <script type="module">
-import '@polymer/polymer/polymer.js';
-import '@polymer/promise-polyfill/promise-polyfill.js';
-import '../exmg-paper-token-input.js';
-suite('<exmg-paper-token-input>', _ => {
-  let fixtureNodes;
 
-  const timePasses = (ms) => {
-    return new Promise((resolve) => {
-      window.setTimeout(_ => {
-        resolve();
-      }, ms);
-    });
-  };
+    suite('<exmg-paper-token-input>', _ => {
+      let fixtureNodes;
 
-  setup(function() {
-    fixtureNodes = fixture('BasicRequest');
-  });
+      const timePasses = (ms) => {
+        return new Promise((resolve) => {
+          window.setTimeout(_ => {
+            resolve();
+          }, ms);
+        });
+      };
 
-  teardown(function() {
-
-  });
-
-  suite('basic usage', _ => {
-    test('Test basic api pet list call', function(done) {
-      timePasses(100).then(_ => {
-        done();
+      setup(function() {
+        fixtureNodes = fixture('BasicRequest');
       });
-    });
-  });
 
-});
-</script>
+      teardown(function() {
+
+      });
+
+      suite('basic usage', _ => {
+        test('Test', function(done) {
+          timePasses(100).then(_ => {
+            done();
+          });
+        });
+      });
+
+    });
+  </script>
 
 </body>
 </html>
