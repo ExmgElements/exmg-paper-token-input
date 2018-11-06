@@ -110,9 +110,9 @@ export class TokenInputElement extends PolymerElement {
         }
       </style>
 
-      <paper-input-container always-float-label="[[_computeAlwaysFloatLabel(selectedItems.*, alwaysFloatLabel)]]" on-tap="_handleContainerTap" disabled\$="[[disabled]]" focused="{{inputFocused}}" invalid="[[invalid]]">
+      <paper-input-container always-float-label="[[_computeAlwaysFloatLabel(selectedItems.*, alwaysFloatLabel)]]" on-tap="_handleContainerTap" disabled$="[[disabled]]" focused="{{inputFocused}}" invalid="[[invalid]]">
 
-        <label slot="label" hidden\$="[[!label]]" aria-hidden="true">[[label]]</label>
+        <label slot="label" hidden$="[[!label]]" aria-hidden="true">[[label]]</label>
 
         <div slot="input" class="paper-input-input" bind-value="{{_inputValue}}">
           <span class="tokens">
@@ -122,7 +122,7 @@ export class TokenInputElement extends PolymerElement {
               </paper-button>
             </template>
             <iron-input bind-value="{{_inputValue}}">
-              <input id="inputValue" aria-labelledby="label" value="{{_inputValue::input}}" autofocus\$="[[autofocus]]" autocomplete="off" disabled\$="[[disabled]]">
+              <input id="inputValue" aria-labelledby="label" value="{{_inputValue::input}}" autofocus$="[[autofocus]]" autocomplete="off" disabled$="[[disabled]]">
             </iron-input>
           </span>
         </div>
@@ -134,8 +134,8 @@ export class TokenInputElement extends PolymerElement {
 
       <span id="inputWidthHelper">[[_inputValue]]</span>
 
-      <paper-menu-button close-on-activate="" opened="{{opened}}" vertical-offset="60" horizontal-align="right" restore-focus-on-close="" disabled\$="[[disabled]]">
-        <paper-icon-button icon="exmg-paper-token-input-icons:arrow-drop-down" data-opened\$="[[opened]]" slot="dropdown-trigger"></paper-icon-button>
+      <paper-menu-button close-on-activate="" opened="{{opened}}" vertical-offset="60" horizontal-align="right" restore-focus-on-close="" disabled$="[[disabled]]">
+        <paper-icon-button icon="exmg-paper-token-input-icons:arrow-drop-down" data-opened$="[[opened]]" slot="dropdown-trigger"></paper-icon-button>
         <paper-listbox id="listbox" selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])" attr-for-selected="{{attrForSelected}}" slot="dropdown-content" selected-items="{{selectedItems}}" selected-values="{{selectedValues}}" on-iron-select="_handleAddToken" on-iron-deselect="_resetInput" multi="">
           <slot></slot>
         </paper-listbox>
