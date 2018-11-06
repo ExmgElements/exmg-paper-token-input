@@ -1,7 +1,7 @@
 {
   "name": "@exmg/exmg-paper-token-input",
   "flat": true,
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Paper style token input element",
   "contributors": [
     "Ex Machina"
