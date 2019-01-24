@@ -13,7 +13,11 @@
     "token",
     "input"
   ],
-  "main": "exmg-paper-token-input.js",
+  "main": "exmg-paper-token-input.ts",
+  "files": [
+    "exmg-*.js",
+    "exmg-*.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/ExmgElements/exmg-paper-token-input.git"
@@ -30,16 +34,19 @@
     "@polymer/paper-listbox": "^3.0.1",
     "@polymer/paper-menu-button": "^3.0.1",
     "@polymer/paper-styles": "^3.0.1",
-    "@polymer/polymer": "^3.1.0"
+    "@polymer/polymer": "^3.1.0",
+    "lit-element": "^2.0.0-rc.3"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^4.0.1",
     "@polymer/iron-demo-helpers": "^3.0.2",
     "@polymer/paper-item": "^3.0.1",
     "@webcomponents/webcomponentsjs": "^2.1.3",
-    "eslint": "^4.11.0",
-    "eslint-config-exmg": "latest",
-    "eslint-plugin-html": "^3.0.0",
+    "gulp": "^4.0.0",
+    "tslint": "^5.12.1",
+    "tslint-config-airbnb": "^5.11.1",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.2.4",
     "wct-browser-legacy": "^1.0.2",
     "web-animations-js": "^2.3.1"
   },
@@ -50,9 +57,9 @@
     "samsam": "1.1.2"
   },
   "scripts": {
-    "lint": "polymer lint --rules polymer-3 --input *.js",
-    "eslint": "eslint . --ext js,html --ignore-path .gitignore",
-    "analyze": "polymer analyze > analysis.json"
+    "start": "gulp serve",
+    "tslint": "tslint -c ./tslint.json --project ./",
+    "gen-docs": "typedoc --excludeNotExported --excludeExternals --excludePrivate --excludeProtected --ignoreCompilerErrors --exclude '{**/*test*,**/node_modules/**,**/test/**}' --out docs/ *.ts"
   },
   "publishConfig": {
     "access": "public"
