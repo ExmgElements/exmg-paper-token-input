@@ -122,10 +122,10 @@ export class TokenInputElement extends LitElement {
    * This field will be bind to the actual input field
    */
   @property({type: String})
-  public inputValue?: string;
+  public inputValue?: string = '';
 
   @property({type: Array})
-  private tokens: any[] = [];
+  private tokens: any[] = [{text: 'aaa'}];
 
   @property({type: Boolean})
   public invalid: boolean = false;
