@@ -7,6 +7,7 @@
     <title>exmg-paper-token-input demo</title>
 
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@webcomponents/shadycss/apply-shim.min.js"></script>
 
     <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
     <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-snippet.js"></script>
@@ -55,68 +56,68 @@
         </template>
       </demo-snippet>
 
-      <h3>Example Max 2 tokens</h3>
-      <demo-snippet>
-        <template>
-          <exmg-paper-token-input label="Select Users" max-tokens="2">
-            <paper-item>Rubin</paper-item>
-            <paper-item>Gennie</paper-item>
-            <paper-item>Ronna</paper-item>
-            <paper-item>Jacquie</paper-item>
-            <paper-item>Norene</paper-item>
-            <paper-item>Beatris</paper-item>
-            <paper-item>Ginny</paper-item>
-            <paper-item>Tiesha</paper-item>
-            <paper-item>Leonore</paper-item>
-            <paper-item>Evonne</paper-item>
-          </exmg-paper-token-input>
-        </template>
-      </demo-snippet>
+      <!--<h3>Example Max 2 tokens</h3>-->
+      <!--<demo-snippet>-->
+        <!--<template>-->
+          <!--<exmg-paper-token-input label="Select Users" max-tokens="2">-->
+            <!--<paper-item>Rubin</paper-item>-->
+            <!--<paper-item>Gennie</paper-item>-->
+            <!--<paper-item>Ronna</paper-item>-->
+            <!--<paper-item>Jacquie</paper-item>-->
+            <!--<paper-item>Norene</paper-item>-->
+            <!--<paper-item>Beatris</paper-item>-->
+            <!--<paper-item>Ginny</paper-item>-->
+            <!--<paper-item>Tiesha</paper-item>-->
+            <!--<paper-item>Leonore</paper-item>-->
+            <!--<paper-item>Evonne</paper-item>-->
+          <!--</exmg-paper-token-input>-->
+        <!--</template>-->
+      <!--</demo-snippet>-->
 
-      <h3>Example paper icon item</h3>
-      <demo-snippet>
-        <template>
-          <exmg-paper-token-input label="Select Users" attr-for-selected="data-id" selected-item-selector="div.name">
-            <paper-icon-item data-id="222452">
-              <iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/cepreygolubev/73.jpg" slot="item-icon"></iron-icon>
-              <paper-item-body two-line="">
-                <div class="name">Piet</div>
-                <div secondary="">(901) 504-3233</div>
-              </paper-item-body>
-            </paper-icon-item>
-            <paper-icon-item data-id="622459">
-              <iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/sebasribas/73.jpg" slot="item-icon"></iron-icon>
-              <paper-item-body two-line="">
-                <div class="name">Jesse</div>
-                <div secondary="">(901) 504-3233</div>
-              </paper-item-body>
-            </paper-icon-item>
-            <paper-icon-item data-id="922462">
-              <iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/dnevozhai/73.jpg" slot="item-icon"></iron-icon>
-              <paper-item-body two-line="">
-                <div class="name">Mark</div>
-                <div secondary="">(901) 504-3233</div>
-              </paper-item-body>
-            </paper-icon-item>
-          </exmg-paper-token-input>
-        </template>
-      </demo-snippet>
+      <!--<h3>Example paper icon item</h3>-->
+      <!--<demo-snippet>-->
+        <!--<template>-->
+          <!--<exmg-paper-token-input label="Select Users" attr-for-selected="data-id" selected-item-selector="div.name">-->
+            <!--<paper-icon-item data-id="222452">-->
+              <!--<iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/cepreygolubev/73.jpg" slot="item-icon"></iron-icon>-->
+              <!--<paper-item-body two-line="">-->
+                <!--<div class="name">Piet</div>-->
+                <!--<div secondary="">(901) 504-3233</div>-->
+              <!--</paper-item-body>-->
+            <!--</paper-icon-item>-->
+            <!--<paper-icon-item data-id="622459">-->
+              <!--<iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/sebasribas/73.jpg" slot="item-icon"></iron-icon>-->
+              <!--<paper-item-body two-line="">-->
+                <!--<div class="name">Jesse</div>-->
+                <!--<div secondary="">(901) 504-3233</div>-->
+              <!--</paper-item-body>-->
+            <!--</paper-icon-item>-->
+            <!--<paper-icon-item data-id="922462">-->
+              <!--<iron-icon src="https://s3.amazonaws.com/uifaces/faces/twitter/dnevozhai/73.jpg" slot="item-icon"></iron-icon>-->
+              <!--<paper-item-body two-line="">-->
+                <!--<div class="name">Mark</div>-->
+                <!--<div secondary="">(901) 504-3233</div>-->
+              <!--</paper-item-body>-->
+            <!--</paper-icon-item>-->
+          <!--</exmg-paper-token-input>-->
+        <!--</template>-->
+      <!--</demo-snippet>-->
 
-      <h3>Example Required/Disabled</h3>
-      <demo-snippet>
-        <template>
-          <exmg-paper-token-input label="Select Users" required="" auto-validate="" error-message="Input required">
-            <paper-item>Rubin</paper-item>
-            <paper-item>Gennie</paper-item>
-            <paper-item>Ronna</paper-item>
-          </exmg-paper-token-input>
-          <exmg-paper-token-input label="Select Users" disabled="">
-            <paper-item>Rubin</paper-item>
-            <paper-item>Gennie</paper-item>
-            <paper-item>Ronna</paper-item>
-          </exmg-paper-token-input>
-        </template>
-      </demo-snippet>
+      <!--<h3>Example Required/Disabled</h3>-->
+      <!--<demo-snippet>-->
+        <!--<template>-->
+          <!--<exmg-paper-token-input label="Select Users" required="" auto-validate="" error-message="Input required">-->
+            <!--<paper-item>Rubin</paper-item>-->
+            <!--<paper-item>Gennie</paper-item>-->
+            <!--<paper-item>Ronna</paper-item>-->
+          <!--</exmg-paper-token-input>-->
+          <!--<exmg-paper-token-input label="Select Users" disabled="">-->
+            <!--<paper-item>Rubin</paper-item>-->
+            <!--<paper-item>Gennie</paper-item>-->
+            <!--<paper-item>Ronna</paper-item>-->
+          <!--</exmg-paper-token-input>-->
+        <!--</template>-->
+      <!--</demo-snippet>-->
 
     </div>
   </body>

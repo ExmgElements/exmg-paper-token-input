@@ -211,42 +211,42 @@ export class TokenInputElement extends LitElement {
     }
   }
 
-  public connectedCallback() {
-    super.connectedCallback();
-    /**
-     * Initialize the input helper span element for determining the actual width of the input
-     * text. This width will be used to create a dynamic width on the input field
-     */
-    this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode, null).cssText;
-    this.inputWidthHelperNode.style.position = 'absolute';
-    this.inputWidthHelperNode.style.top = '-999px';
-    this.inputWidthHelperNode.style.left = '0';
-    this.inputWidthHelperNode.style.padding = '0';
-    this.inputWidthHelperNode.style.width = 'auto';
-    this.inputWidthHelperNode.style['white-space'] = 'pre';
-
-    this.inputValueNode.addEventListener('keydown', this.handleKeyDown);
-
-    if (this.autoValidate) {
-      window.addEventListener('click', this.handleClick);
-    }
-  }
-
-  public disconnectedCallback() {
-    super.disconnectedCallback();
-
-    this.inputValueNode.removeEventListener('keydown', this.handleKeyDown);
-
-    if (this.autoValidate) {
-      window.removeEventListener('click', this.handleClick);
-    }
-  }
+  // public connectedCallback() {
+  //   super.connectedCallback();
+  //   /**
+  //    * Initialize the input helper span element for determining the actual width of the input
+  //    * text. This width will be used to create a dynamic width on the input field
+  //    */
+  //   this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode, null).cssText;
+  //   this.inputWidthHelperNode.style.position = 'absolute';
+  //   this.inputWidthHelperNode.style.top = '-999px';
+  //   this.inputWidthHelperNode.style.left = '0';
+  //   this.inputWidthHelperNode.style.padding = '0';
+  //   this.inputWidthHelperNode.style.width = 'auto';
+  //   this.inputWidthHelperNode.style['white-space'] = 'pre';
+  //
+  //   this.inputValueNode.addEventListener('keydown', this.handleKeyDown);
+  //
+  //   if (this.autoValidate) {
+  //     window.addEventListener('click', this.handleClick);
+  //   }
+  // }
+  //
+  // public disconnectedCallback() {
+  //   super.disconnectedCallback();
+  //
+  //   this.inputValueNode.removeEventListener('keydown', this.handleKeyDown);
+  //
+  //   if (this.autoValidate) {
+  //     window.removeEventListener('click', this.handleClick);
+  //   }
+  // }
 
   private handleKeyDown(e) {
     this.inputValue = this.inputValue || '';
     switch (e.keyCode) {
       case BACKSPACE:
-        this.splice('selectedValues', this.selectedValues.length - 1, 1);
+        this.selectedValues.splice(this.selectedValues.length - 1, 1);
         this.focus();
         break;
       case ARROWDOWN:
