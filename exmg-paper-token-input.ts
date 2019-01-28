@@ -9,6 +9,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-input/paper-input-container.js';
 import '@polymer/paper-styles/paper-styles.js';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
+import './exmg-paper-token-input-icons';
 
 const BACKSPACE = 8;
 const ARROWDOWN = 40;
@@ -125,7 +126,7 @@ export class TokenInputElement extends LitElement {
   public inputValue?: string = '';
 
   @property({type: Array})
-  private tokens: any[] = [{text: 'aaa'}];
+  private tokens: any[] = [];
 
   @property({type: Boolean})
   public invalid: boolean = false;
@@ -133,6 +134,7 @@ export class TokenInputElement extends LitElement {
   @property({type: Boolean})
   public inputFocused: boolean = false;
 
+  @property({type: Boolean})
   private opened: boolean = false;
 
   @query('#listbox')
@@ -170,6 +172,7 @@ export class TokenInputElement extends LitElement {
    * @returns Returns the index of the item
    */
   indexOf(item: any) {
+    console.log('indexOf', item);
     return this.listBoxNode.items ? this.listBoxNode.items.indexOf(item) : -1;
   }
 
@@ -201,6 +204,7 @@ export class TokenInputElement extends LitElement {
   private filterItems() {
     const items = this.querySelectorAll('paper-item');
     const inputValue = this.inputValue || '';
+    console.log('filterItems');
 
     for (let i = 0; i < items.length; i = i + 1) {
       if (inputValue.length > 0 && (items[i].textContent || '').indexOf(inputValue) === -1) {
@@ -265,6 +269,7 @@ export class TokenInputElement extends LitElement {
   }
 
   private handleDeleteToken(e: any) {
+    console.log('handleDeleteToken');
     const i = Array.from(this.selectedValues).map(v => String(v)).indexOf(String(e.model.token.id));
     this.selectedValues.splice(i, 1);
     this.focus();
@@ -293,11 +298,13 @@ export class TokenInputElement extends LitElement {
   }
 
   private handleContainerTap(e) {
+    console.log('handleContainerTap');
     this.opened = true;
     afterNextRender(this, _ => this.focus());
   }
 
   private handleAddToken(e) {
+    console.log('handleAddToken', handleAddToken);
     if (this.maxTokens && this.selectedItems.length > this.maxTokens) {
       e.stopPropagation();
       this.selectedValues.splice(this.selectedValues.length - 1, 1);
@@ -323,6 +330,7 @@ export class TokenInputElement extends LitElement {
   }
 
   protected render() {
+    console.log('this.opened', this.opened);
     return html`
       <style>
         :host {
@@ -387,12 +395,12 @@ export class TokenInputElement extends LitElement {
 
       <paper-input-container
         always-float-label="${this.computeAlwaysFloatLabel(this.selectedItems, this.alwaysFloatLabel)}"
-        @tap="${this.handleContainerTap}"
-        disabled="${this.disabled}"
-        focused="${this.inputFocused}"
-        invalid="${this.invalid}"
+        @tap=${this.handleContainerTap}
+        ?disabled="${this.disabled}"
+        ?focused="${this.inputFocused}"
+        ?invalid="${this.invalid}"
       >
-        <label slot="label" hidden="${!this.label}" aria-hidden="true">${this.label}</label>
+        <label slot="label" ?hidden="${!this.label}" aria-hidden="${!this.label}">${this.label}</label>
 
         <div slot="input" class="paper-input-input" bind-value="${this.inputValue}">
           <span class="tokens">
@@ -411,9 +419,9 @@ export class TokenInputElement extends LitElement {
                 id="inputValue"
                 aria-labelledby="label"
                 value="${this.inputValue}"
-                autofocus="${this.autofocus}"
+                ?autofocus="${this.autofocus}"
                 autocomplete="off"
-                disabled="${this.disabled}"
+                ?disabled="${this.disabled}"
               >
             </iron-input>
           </span>
@@ -426,15 +434,15 @@ export class TokenInputElement extends LitElement {
 
       <paper-menu-button
         close-on-activate=""
-        opened="${this.opened}"
+        ?opened="${this.opened}"
         vertical-offset="60"
         horizontal-align="right"
         restore-focus-on-close=""
-        disabled="${this.disabled}"
+        ?disabled="${this.disabled}"
       >
         <paper-icon-button
             icon="exmg-paper-token-input-icons:arrow-drop-down"
-            data-opened="${this.opened}"
+            ?data-opened="${this.opened}"
             slot="dropdown-trigger"
         ></paper-icon-button>
         <paper-listbox
@@ -442,8 +450,8 @@ export class TokenInputElement extends LitElement {
             selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
             attr-for-selected="${this.attrForSelected}"
             slot="dropdown-content"
-            selected-items="${this.selectedItems}"
-            selected-values="${this.selectedValues}"
+            .selected-items="${this.selectedItems}"
+            .selected-values="${this.selectedValues}"
             @iron-select="${this.handleAddToken}"
             @iron-deselect="${this.resetInput}"
             multi=""
