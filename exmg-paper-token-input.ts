@@ -306,14 +306,14 @@ export class TokenInputElement extends LitElement {
     if (this.maxTokens && this.selectedValues.length >= this.maxTokens) {
       e.stopPropagation();
     } else {
-      this.selectedValues.push(e.detail.item.innerText)
+      this.selectedValues.push(e.detail.item.textContent)
     }
 
     this.resetInput();
   }
 
   private onPaperListBoxItemDeselect(e: CustomEvent): void {
-    this.selectedValues.splice(this.selectedValues.indexOf(e.detail.item.innerText), 1);
+    this.selectedValues.splice(this.selectedValues.indexOf(e.detail.item.textContent), 1);
 
     this.resetInput();
   }
@@ -456,6 +456,7 @@ export class TokenInputElement extends LitElement {
         ></paper-icon-button>
         <paper-listbox
             id="listbox"
+            selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
             slot="dropdown-content"
             @iron-select="${this.onPaperListBoxItemSelect}"
             @iron-deselect="${this.onPaperListBoxItemDeselect}"
