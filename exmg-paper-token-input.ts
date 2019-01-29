@@ -238,6 +238,16 @@ export class TokenInputElement extends LitElement {
     if (this.autoValidate) {
       window.addEventListener('click', this.onWindowClick);
     }
+
+    const intervalForListBoxNode = setInterval(() => {
+      if (this.listBoxNode) {
+        clearInterval(intervalForListBoxNode);
+        // console.log(this.selectedValues);
+        // this.listBoxNode.select(['Gennie']);
+        // this.listBoxNode.selectIndex(3);
+        // console.log('aaa');
+      }
+    });
   }
 
   public disconnectedCallback(): void {
