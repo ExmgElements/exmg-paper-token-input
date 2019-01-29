@@ -272,11 +272,11 @@ export class TokenInputElement extends LitElement {
     this.opened = e.detail.value;
   }
 
-  private onInputContainerButtonTap(e: Event): void {
-    // console.log('e', e.model);
-    // const i = Array.from(this.selectedValues).map(v => String(v)).indexOf(String(e.model.token.id));
-    // this.selectedValues.splice(i, 1);
-    this.focus();
+  private onInputContainerButtonTap(value: any): () => void {
+    return () => {
+      this.selectedValues.splice(this.selectedValues.indexOf(value), 1);
+      this.focus();
+    };
   }
 
   public focus(): void {
@@ -415,7 +415,7 @@ export class TokenInputElement extends LitElement {
             ${
                 this.selectedValues.map((value) => {
                   return html`
-                    <paper-button tabindex="-1" @tap="${this.onInputContainerButtonTap}">
+                    <paper-button tabindex="-1" @tap="${this.onInputContainerButtonTap(value)}">
                       <span>${value}</span>
                       <iron-icon icon="exmg-paper-token-input-icons:clear"></iron-icon>
                     </paper-button>
