@@ -14,6 +14,14 @@ import './exmg-paper-token-input-icons';
 const BACKSPACE = 8;
 const ARROWDOWN = 40;
 
+interface DetailEvent extends Event {
+  detail: any;
+}
+
+interface ModelEvent extends Event {
+  model: any;
+}
+
 /**
  * `exmg-paper-token-input` is an paper style token input element"
  *
@@ -125,9 +133,6 @@ export class TokenInputElement extends LitElement {
   @property({type: String})
   public inputValue?: string = '';
 
-  @property({type: Array})
-  private tokens: any[] = [];
-
   @property({type: Boolean})
   public invalid: boolean = false;
 
@@ -146,22 +151,17 @@ export class TokenInputElement extends LitElement {
   @query('#inputWidthHelper')
   private inputWidthHelperNode?: HTMLElement | any;
 
-  // static get observers() {
-  //   return [
-  //     'observeInputChange(inputValue)',
-  //     'observeSelectedItems(selectedItems.*)',
-  //   ];
-  // }
-
   constructor() {
     super();
     this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.onWindowClick = this.onWindowClick.bind(this);
     this.resetInput = this.resetInput.bind(this);
-    this.handleAddToken = this.handleAddToken.bind(this);
-    this.handleContainerTap = this.handleContainerTap.bind(this);
-    this.handleDeleteToken = this.handleDeleteToken.bind(this);
+    this.onPaperListBoxItemSelect = this.onPaperListBoxItemSelect.bind(this);
+    this.onPaperListBoxItemDeselect = this.onPaperListBoxItemDeselect.bind(this);
+    this.onInputContainerTap = this.onInputContainerTap.bind(this);
+    this.onInputContainerButtonTap = this.onInputContainerButtonTap.bind(this);
     this.computeAlwaysFloatLabel = this.computeAlwaysFloatLabel.bind(this);
+    this.onPaperMenuVisibilityChanged = this.onPaperMenuVisibilityChanged.bind(this);
   }
 
   /**
@@ -171,24 +171,25 @@ export class TokenInputElement extends LitElement {
    * @param {Object} item
    * @returns Returns the index of the item
    */
-  indexOf(item: any) {
-    console.log('indexOf', item);
-    return this.listBoxNode.items ? this.listBoxNode.items.indexOf(item) : -1;
-  }
+  // indexOf(item: any) {
+  //   console.log('indexOf', item);
+  //   return this.listBoxNode.items ? this.listBoxNode.items.indexOf(item) : -1;
+  // }
 
-  private previousInsideClick: any;
+  private previousClickWasInside: boolean = false;
 
-  private handleClick(e) {
-    const inside = e.path.find((path) => path === this);
-    // Detect outside element click for auto validate input
-    if (this.autoValidate && !inside && this.previousInsideClick) {
+  private onWindowClick(e: MouseEvent): void {
+    const isInsideClick = !!e.composedPath().find((path) => path === this);
+
+    if (this.autoValidate && !isInsideClick && this.previousClickWasInside) {
       this.validate();
     }
-    this.previousInsideClick = inside;
+
+    this.previousClickWasInside = isInsideClick;
   }
 
-  // private observeSelectedItems(c) {
-  //   this.tokens = this.selectedItems.map((si) => {
+  // private updateSelectedTokens() {
+  //   this.selectedTokens = this.selectedItems.map((si) => {
   //     const id = this.attrForSelected ? si.getAttribute(this.attrForSelected) : this.indexOf(si);
   //     const text = this.selectedItemSelector ? si.querySelector(this.selectedItemSelector).textContent
   //       : si.textContent;
@@ -201,52 +202,52 @@ export class TokenInputElement extends LitElement {
   //   this.filterItems();
   // }
 
-  private filterItems() {
-    const items = this.querySelectorAll('paper-item');
-    const inputValue = this.inputValue || '';
-    console.log('filterItems');
+  // private filterItems() {
+  //   const items = this.querySelectorAll('paper-item');
+  //   const inputValue = this.inputValue || '';
+  //   console.log('filterItems');
+  //
+  //   for (let i = 0; i < items.length; i = i + 1) {
+  //     if (inputValue.length > 0 && (items[i].textContent || '').indexOf(inputValue) === -1) {
+  //       items[i].setAttribute('hidden', '');
+  //     } else {
+  //       items[i].removeAttribute('hidden');
+  //     }
+  //   }
+  // }
 
-    for (let i = 0; i < items.length; i = i + 1) {
-      if (inputValue.length > 0 && (items[i].textContent || '').indexOf(inputValue) === -1) {
-        items[i].setAttribute('hidden', '');
-      } else {
-        items[i].removeAttribute('hidden');
-      }
+  public connectedCallback(): void {
+    super.connectedCallback();
+    /**
+     * Initialize the input helper span element for determining the actual width of the input
+     * text. This width will be used to create a dynamic width on the input field
+     */
+    // this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode, null).cssText;
+    // this.inputWidthHelperNode.style.position = 'absolute';
+    // this.inputWidthHelperNode.style.top = '-999px';
+    // this.inputWidthHelperNode.style.left = '0';
+    // this.inputWidthHelperNode.style.padding = '0';
+    // this.inputWidthHelperNode.style.width = 'auto';
+    // this.inputWidthHelperNode.style['white-space'] = 'pre';
+
+    // this.inputValueNode.addEventListener('keydown', this.handleKeyDown);
+
+    if (this.autoValidate) {
+      window.addEventListener('click', this.onWindowClick);
     }
   }
 
-  // public connectedCallback() {
-  //   super.connectedCallback();
-  //   /**
-  //    * Initialize the input helper span element for determining the actual width of the input
-  //    * text. This width will be used to create a dynamic width on the input field
-  //    */
-  //   this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode, null).cssText;
-  //   this.inputWidthHelperNode.style.position = 'absolute';
-  //   this.inputWidthHelperNode.style.top = '-999px';
-  //   this.inputWidthHelperNode.style.left = '0';
-  //   this.inputWidthHelperNode.style.padding = '0';
-  //   this.inputWidthHelperNode.style.width = 'auto';
-  //   this.inputWidthHelperNode.style['white-space'] = 'pre';
-  //
-  //   this.inputValueNode.addEventListener('keydown', this.handleKeyDown);
-  //
-  //   if (this.autoValidate) {
-  //     window.addEventListener('click', this.handleClick);
-  //   }
-  // }
-  //
-  // public disconnectedCallback() {
-  //   super.disconnectedCallback();
-  //
-  //   this.inputValueNode.removeEventListener('keydown', this.handleKeyDown);
-  //
-  //   if (this.autoValidate) {
-  //     window.removeEventListener('click', this.handleClick);
-  //   }
-  // }
+  public disconnectedCallback(): void {
+    super.disconnectedCallback();
 
-  private handleKeyDown(e) {
+    // this.inputValueNode.removeEventListener('keydown', this.handleKeyDown);
+
+    if (this.autoValidate) {
+      window.removeEventListener('click', this.onWindowClick);
+    }
+  }
+
+  private handleKeyDown(e: KeyboardEvent): void {
     this.inputValue = this.inputValue || '';
     switch (e.keyCode) {
       case BACKSPACE:
@@ -264,22 +265,18 @@ export class TokenInputElement extends LitElement {
     }
   }
 
-  private hasSelectedItems() {
-    return this.selectedValues && this.selectedValues.length > 0;
+  private onPaperMenuVisibilityChanged(): void {
+    console.log('onPaperMenuVisibilityChanged');
   }
 
-  private handleDeleteToken(e: any) {
-    console.log('handleDeleteToken');
-    const i = Array.from(this.selectedValues).map(v => String(v)).indexOf(String(e.model.token.id));
-    this.selectedValues.splice(i, 1);
+  private onInputContainerButtonTap(e: ModelEvent): void {
+    // console.log('e', e.model);
+    // const i = Array.from(this.selectedValues).map(v => String(v)).indexOf(String(e.model.token.id));
+    // this.selectedValues.splice(i, 1);
     this.focus();
   }
-  /**
-   * this method can be used to set the focus of the element
-   *
-   * @method indexOf
-   */
-  public focus() {
+
+  public focus(): void {
     this.inputValueNode.focus();
   }
 
@@ -297,40 +294,48 @@ export class TokenInputElement extends LitElement {
     //   && this.inputValueNode !== document.activeElement);
   }
 
-  private handleContainerTap(e) {
-    console.log('handleContainerTap');
+  private onInputContainerTap(): void {
     this.opened = true;
     afterNextRender(this, _ => this.focus());
   }
 
-  private handleAddToken(e) {
-    console.log('handleAddToken', handleAddToken);
-    if (this.maxTokens && this.selectedItems.length > this.maxTokens) {
+  private onPaperListBoxItemSelect(e: DetailEvent): void {
+    if (this.maxTokens && this.selectedValues.length >= this.maxTokens) {
       e.stopPropagation();
-      this.selectedValues.splice(this.selectedValues.length - 1, 1);
+    } else {
+      this.selectedValues.push(e.detail.item.innerText)
     }
+
     this.resetInput();
   }
 
-  private resetInput() {
+  private onPaperListBoxItemDeselect(e: DetailEvent): void {
+    this.selectedValues.splice(this.selectedValues.indexOf(e.detail.item.innerText), 1);
+
+    this.resetInput();
+  }
+
+  private resetInput(): void {
+    this.opened = false;
+
     if (this.autoValidate) {
       this.validate();
     }
+
     this.inputValue = '';
     this.focus();
   }
 
-  /**
-  * Returns true if `value` is valid.
-  * @return {boolean} True if the value is valid.
-  */
-  public validate() {
-    this.invalid = this.required && !this.hasSelectedItems();
-    return !this.invalid;
+  private validate(): void {
+    this.invalid = this.required && !this.hasSelectedValues();
+  }
+
+  private hasSelectedValues(): boolean {
+    return this.selectedValues && this.selectedValues.length > 0;
   }
 
   protected render() {
-    console.log('this.opened', this.opened);
+    console.log(this.selectedValues);
     return html`
       <style>
         :host {
@@ -395,7 +400,7 @@ export class TokenInputElement extends LitElement {
 
       <paper-input-container
         always-float-label="${this.computeAlwaysFloatLabel(this.selectedItems, this.alwaysFloatLabel)}"
-        @tap=${this.handleContainerTap}
+        @tap=${this.onInputContainerTap}
         ?disabled="${this.disabled}"
         ?focused="${this.inputFocused}"
         ?invalid="${this.invalid}"
@@ -405,10 +410,10 @@ export class TokenInputElement extends LitElement {
         <div slot="input" class="paper-input-input" bind-value="${this.inputValue}">
           <span class="tokens">
             ${
-                this.tokens.map((token) => {
+                this.selectedValues.map((value) => {
                   return html`
-                    <paper-button tabindex="-1" @tap="${this.handleDeleteToken}">
-                      <span>${token.text}</span>
+                    <paper-button tabindex="-1" @tap="${this.onInputContainerButtonTap}">
+                      <span>${value}</span>
                       <iron-icon icon="exmg-paper-token-input-icons:clear"></iron-icon>
                     </paper-button>
                   `;
@@ -435,6 +440,7 @@ export class TokenInputElement extends LitElement {
       <paper-menu-button
         close-on-activate=""
         ?opened="${this.opened}"
+        @opened-changed="${this.onPaperMenuVisibilityChanged}"
         vertical-offset="60"
         horizontal-align="right"
         restore-focus-on-close=""
@@ -447,13 +453,9 @@ export class TokenInputElement extends LitElement {
         ></paper-icon-button>
         <paper-listbox
             id="listbox"
-            selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
-            attr-for-selected="${this.attrForSelected}"
             slot="dropdown-content"
-            .selected-items="${this.selectedItems}"
-            .selected-values="${this.selectedValues}"
-            @iron-select="${this.handleAddToken}"
-            @iron-deselect="${this.resetInput}"
+            @iron-select="${this.onPaperListBoxItemSelect}"
+            @iron-deselect="${this.onPaperListBoxItemDeselect}"
             multi=""
             >
           <slot></slot>
