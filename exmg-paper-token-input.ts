@@ -14,14 +14,6 @@ import './exmg-paper-token-input-icons';
 const BACKSPACE = 8;
 const ARROWDOWN = 40;
 
-interface DetailEvent extends Event {
-  detail: any;
-}
-
-interface ModelEvent extends Event {
-  model: any;
-}
-
 /**
  * `exmg-paper-token-input` is an paper style token input element"
  *
@@ -265,11 +257,11 @@ export class TokenInputElement extends LitElement {
     }
   }
 
-  private onPaperMenuVisibilityChanged(): void {
-    console.log('onPaperMenuVisibilityChanged');
+  private onPaperMenuVisibilityChanged(e: CustomEvent): void {
+    this.opened = e.detail.value;
   }
 
-  private onInputContainerButtonTap(e: ModelEvent): void {
+  private onInputContainerButtonTap(e: Event): void {
     // console.log('e', e.model);
     // const i = Array.from(this.selectedValues).map(v => String(v)).indexOf(String(e.model.token.id));
     // this.selectedValues.splice(i, 1);
@@ -299,7 +291,7 @@ export class TokenInputElement extends LitElement {
     afterNextRender(this, _ => this.focus());
   }
 
-  private onPaperListBoxItemSelect(e: DetailEvent): void {
+  private onPaperListBoxItemSelect(e: CustomEvent): void {
     if (this.maxTokens && this.selectedValues.length >= this.maxTokens) {
       e.stopPropagation();
     } else {
@@ -309,7 +301,7 @@ export class TokenInputElement extends LitElement {
     this.resetInput();
   }
 
-  private onPaperListBoxItemDeselect(e: DetailEvent): void {
+  private onPaperListBoxItemDeselect(e: CustomEvent): void {
     this.selectedValues.splice(this.selectedValues.indexOf(e.detail.item.innerText), 1);
 
     this.resetInput();
@@ -457,7 +449,7 @@ export class TokenInputElement extends LitElement {
             @iron-select="${this.onPaperListBoxItemSelect}"
             @iron-deselect="${this.onPaperListBoxItemDeselect}"
             multi=""
-            >
+        >
           <slot></slot>
         </paper-listbox>
       </paper-menu-button>
