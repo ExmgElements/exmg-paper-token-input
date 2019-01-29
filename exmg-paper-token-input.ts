@@ -48,7 +48,7 @@ export class TokenInputElement extends LitElement {
    * selection works in both cases. (Use `attr-or-property-name` instead of
    * `attrOrPropertyName`.)
    */
-  @property({type: String})
+  @property({type: String, attribute: 'attr-for-selected'})
   public attrForSelected?: string;
 
   /**
@@ -61,15 +61,9 @@ export class TokenInputElement extends LitElement {
   public selectedItemSelector?: string;
 
   /**
-   * Returns an array of currently selected items.
-   */
-  @property({type: Array})
-  public selectedItems: any[] = []; // migrate notify: true
-
-  /**
    * Gets or sets the selected elements.
    */
-  @property({type: Array})
+  @property({type: Array, attribute: 'selected-values'})
   public selectedValues: any[] = []; // migrate notify: true
 
   /**
@@ -133,6 +127,9 @@ export class TokenInputElement extends LitElement {
 
   @property({type: Boolean})
   private opened: boolean = false;
+
+  @property({type: Array})
+  private selectedItems: any[] = []; // migrate notify: true
 
   @query('#listbox')
   private listBoxNode?: HTMLElement | any;
@@ -242,10 +239,27 @@ export class TokenInputElement extends LitElement {
     const intervalForListBoxNode = setInterval(() => {
       if (this.listBoxNode) {
         clearInterval(intervalForListBoxNode);
+
+        const listBoxNodeValues = this.listBoxNode.items.map((item: HTMLElement) => {
+          if (this.attrForSelected) {
+            return (<Attr>(item.attributes.getNamedItem(this.attrForSelected) || {})).value;
+          }
+
+          return item.textContent;
+        }).filter((value: any) => typeof value !== "undefined");
+
+        console.log(listBoxNodeValues);
+        console.log('this.selectedValues', this.selectedValues);
         // console.log(this.selectedValues);
         // this.listBoxNode.select(['Gennie']);
-        // this.listBoxNode.selectIndex(3);
-        // console.log('aaa');
+        this.selectedValues.forEach((selectedValue: any) => {
+          this.listBoxNode.selectIndex(listBoxNodeValues.indexOf(selectedValue));
+        });
+
+        // this.listBoxNode.selectIndex(4);
+
+        // this.listBoxNode.select('Ginny');
+        // console.log(this.listBoxNode.items);
       }
     });
   }
