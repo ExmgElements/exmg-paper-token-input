@@ -211,18 +211,29 @@ export class TokenInputElement extends LitElement {
   public connectedCallback(): void {
     super.connectedCallback();
     /**
-     * Initialize the input helper span element for determining the actual width of the input
-     * text. This width will be used to create a dynamic width on the input field
+     * @todo use promises
      */
-    // this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode, null).cssText;
-    // this.inputWidthHelperNode.style.position = 'absolute';
-    // this.inputWidthHelperNode.style.top = '-999px';
-    // this.inputWidthHelperNode.style.left = '0';
-    // this.inputWidthHelperNode.style.padding = '0';
-    // this.inputWidthHelperNode.style.width = 'auto';
-    // this.inputWidthHelperNode.style['white-space'] = 'pre';
+    const intervalForInputValueNode = setInterval(() => {
+      if (this.inputValueNode) {
+        clearInterval(intervalForInputValueNode);
 
-    // this.inputValueNode.addEventListener('keydown', this.handleKeyDown);
+        this.inputValueNode.addEventListener('keydown', this.handleKeyDown);
+
+        const intervalForInputWidthHelperNode = setInterval(() => {
+          if (this.inputWidthHelperNode) {
+            this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode, null).cssText;
+            this.inputWidthHelperNode.style.position = 'absolute';
+            this.inputWidthHelperNode.style.top = '-999px';
+            this.inputWidthHelperNode.style.left = '0';
+            this.inputWidthHelperNode.style.padding = '0';
+            this.inputWidthHelperNode.style.width = 'auto';
+            this.inputWidthHelperNode.style['white-space'] = 'pre';
+
+            clearInterval(intervalForInputWidthHelperNode);
+          }
+        });
+      }
+    });
 
     if (this.autoValidate) {
       window.addEventListener('click', this.onWindowClick);
@@ -232,7 +243,7 @@ export class TokenInputElement extends LitElement {
   public disconnectedCallback(): void {
     super.disconnectedCallback();
 
-    // this.inputValueNode.removeEventListener('keydown', this.handleKeyDown);
+    this.inputValueNode.removeEventListener('keydown', this.handleKeyDown);
 
     if (this.autoValidate) {
       window.removeEventListener('click', this.onWindowClick);
