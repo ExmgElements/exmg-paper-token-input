@@ -351,6 +351,8 @@ export class TokenInputElement extends LitElement {
   public connectedCallback(): void {
     super.connectedCallback();
 
+    this.selectedValues = this.selectedValues.map(value => value.toString());
+
     const intervalForListBoxNode = setInterval(() => {
       if (this.listBoxNode) {
         clearInterval(intervalForListBoxNode);
