@@ -64,7 +64,10 @@ export class TokenInputElement extends LitElement {
    * Gets or sets the selected elements.
    */
   @property({type: Array, attribute: 'selected-values'})
-  public selectedValues: any[] = []; // migrate notify: true
+  public selectedValues: any[] = []; // @todo migrate notify: true
+
+  @property({type: Array})
+  private internalSelectedValues: any[] = [];
 
   /**
    * The label for this input.
@@ -133,6 +136,8 @@ export class TokenInputElement extends LitElement {
 
   @query('#listbox')
   private listBoxNode?: HTMLElement | any;
+
+  private listBoxNodeItemsHashMap: any = {};
 
   @query('#inputValue')
   private inputValueNode?: HTMLElement | any;
@@ -240,28 +245,33 @@ export class TokenInputElement extends LitElement {
       if (this.listBoxNode) {
         clearInterval(intervalForListBoxNode);
 
-        const listBoxNodeValues = this.listBoxNode.items.map((item: HTMLElement) => {
-          if (this.attrForSelected) {
-            return (<Attr>(item.attributes.getNamedItem(this.attrForSelected) || {})).value;
-          }
-
-          return item.textContent;
+        const listBoxNodeItems: { value: any, displayValue: any }[] = this.listBoxNode.items.map((item: HTMLElement) => {
+          return {
+            value: this.getPaperItemValue(item),
+            displayValue: item.textContent,
+          };
         }).filter((value: any) => typeof value !== "undefined");
 
-        console.log(listBoxNodeValues);
-        console.log('this.selectedValues', this.selectedValues);
-        // console.log(this.selectedValues);
-        // this.listBoxNode.select(['Gennie']);
-        this.selectedValues.forEach((selectedValue: any) => {
-          this.listBoxNode.selectIndex(listBoxNodeValues.indexOf(selectedValue));
+        const listBoxNodeItemValues = listBoxNodeItems.map((item) => item.value);
+
+        this.listBoxNodeItemsHashMap = {};
+        listBoxNodeItems.forEach((item) => {
+          this.listBoxNodeItemsHashMap[item.value] = item.displayValue;
         });
 
-        // this.listBoxNode.selectIndex(4);
-
-        // this.listBoxNode.select('Ginny');
-        // console.log(this.listBoxNode.items);
+        this.selectedValues.forEach((selectedValue: any) => {
+          // this.listBoxNode.selectIndex(listBoxNodeItemValues.indexOf(selectedValue));
+        });
       }
     });
+  }
+
+  private getPaperItemValue(item: HTMLElement): any {
+    if (this.attrForSelected) {
+      return (<Attr>(item.attributes.getNamedItem(this.attrForSelected) || {})).value;
+    }
+
+    return item.textContent;
   }
 
   public disconnectedCallback(): void {
@@ -327,17 +337,18 @@ export class TokenInputElement extends LitElement {
   }
 
   private onPaperListBoxItemSelect(e: CustomEvent): void {
+    console.log('onPaperListBoxItemSelect', e);
     if (this.maxTokens && this.selectedValues.length >= this.maxTokens) {
       e.stopPropagation();
     } else {
-      this.selectedValues.push(e.detail.item.textContent)
+      this.selectedValues.push(this.getPaperItemValue(e.detail.item))
     }
 
     this.resetInput();
   }
 
   private onPaperListBoxItemDeselect(e: CustomEvent): void {
-    this.selectedValues.splice(this.selectedValues.indexOf(e.detail.item.textContent), 1);
+    this.selectedValues.splice(this.selectedValues.indexOf(this.getPaperItemValue(e.detail.item)), 1);
 
     this.resetInput();
   }
@@ -440,7 +451,7 @@ export class TokenInputElement extends LitElement {
                 this.selectedValues.map((value) => {
                   return html`
                     <paper-button tabindex="-1" @tap="${this.onInputContainerButtonTap(value)}">
-                      <span>${value}</span>
+                      <span>${this.listBoxNodeItemsHashMap[value]}</span>
                       <iron-icon icon="exmg-paper-token-input-icons:clear"></iron-icon>
                     </paper-button>
                   `;
@@ -478,16 +489,34 @@ export class TokenInputElement extends LitElement {
             ?data-opened="${this.opened}"
             slot="dropdown-trigger"
         ></paper-icon-button>
-        <paper-listbox
-            id="listbox"
-            selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
-            slot="dropdown-content"
-            @iron-select="${this.onPaperListBoxItemSelect}"
-            @iron-deselect="${this.onPaperListBoxItemDeselect}"
-            multi=""
-        >
-          <slot></slot>
-        </paper-listbox>
+        ${
+          this.attrForSelected ?
+            html`
+              <paper-listbox
+                id="listbox"
+                attr-for-selected="${this.attrForSelected}"
+                selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
+                slot="dropdown-content"
+                @iron-select="${this.onPaperListBoxItemSelect}"
+                @iron-deselect="${this.onPaperListBoxItemDeselect}"
+                multi=""
+              >
+                <slot></slot>
+              </paper-listbox>
+            ` :
+            html`
+              <paper-listbox
+                id="listbox"
+                selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
+                slot="dropdown-content"
+                @iron-select="${this.onPaperListBoxItemSelect}"
+                @iron-deselect="${this.onPaperListBoxItemDeselect}"
+                multi=""
+              >
+                <slot></slot>
+              </paper-listbox>
+            `
+        }
       </paper-menu-button>
   `;
   }
