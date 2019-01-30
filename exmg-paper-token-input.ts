@@ -511,12 +511,22 @@ export class TokenInputElement extends LitElement {
       </paper-input-container>
 
       <span id="inputWidthHelper">${this.inputValue}</span>
-        
+
       <paper-menu-button
         id="menu"
+        close-on-activate
         ?opened="${this.opened}"
+        @opened-changed="${this.onPaperMenuVisibilityChanged}"
+        vertical-offset="60"
         horizontal-align="right"
+        restore-focus-on-close=""
+        ?disabled="${this.disabled}"
       >
+        <paper-icon-button
+            icon="exmg-paper-token-input-icons:arrow-drop-down"
+            ?data-opened="${this.opened}"
+            slot="dropdown-trigger"
+        ></paper-icon-button>
         <paper-listbox
           id="listbox"
           attr-for-selected="${this.attrForSelected || ''}"
@@ -525,7 +535,7 @@ export class TokenInputElement extends LitElement {
           slot="dropdown-content"
           @iron-select="${this.onPaperListBoxItemSelect}"
           @iron-deselect="${this.onPaperListBoxItemDeselect}"
-          ?multi="${true}"
+          multi
         >
           <slot></slot>
         </paper-listbox>
