@@ -247,6 +247,7 @@ export class TokenInputElement extends LitElement {
       if (this.selectedValues.indexOf(value) === -1) {
         this.selectedValues.push(value);
         this.emitItemSelectEvent(value);
+        this.requestUpdate();
       }
     }
 
@@ -510,30 +511,21 @@ export class TokenInputElement extends LitElement {
       </paper-input-container>
 
       <span id="inputWidthHelper">${this.inputValue}</span>
-
+        
       <paper-menu-button
         id="menu"
-        close-on-activate
         ?opened="${this.opened}"
-        @opened-changed="${this.onPaperMenuVisibilityChanged}"
-        vertical-offset="60"
         horizontal-align="right"
-        restore-focus-on-close=""
-        ?disabled="${this.disabled}"
       >
-        <paper-icon-button
-            icon="exmg-paper-token-input-icons:arrow-drop-down"
-            ?data-opened="${this.opened}"
-            slot="dropdown-trigger"
-        ></paper-icon-button>
         <paper-listbox
           id="listbox"
           attr-for-selected="${this.attrForSelected || ''}"
           selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
+          .selectedValues="${[...this.selectedValues]}"
           slot="dropdown-content"
           @iron-select="${this.onPaperListBoxItemSelect}"
           @iron-deselect="${this.onPaperListBoxItemDeselect}"
-          multi=""
+          ?multi="${true}"
         >
           <slot></slot>
         </paper-listbox>
