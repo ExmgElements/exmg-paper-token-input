@@ -131,10 +131,11 @@ export class TokenInputElement extends LitElement {
   @property({type: Array})
   private selectedItems: any[] = []; // migrate notify: true
 
+  @property({type: Object})
+  private listBoxNodeItemsHashMap: any = {};
+
   @query('#listbox')
   private listBoxNode?: HTMLElement | any;
-
-  private listBoxNodeItemsHashMap: any = {};
 
   @query('#inputValue')
   private inputValueNode?: HTMLElement | any;
@@ -239,10 +240,11 @@ export class TokenInputElement extends LitElement {
 
         const listBoxNodeItemValues = listBoxNodeItems.map((item) => item.value);
 
-        this.listBoxNodeItemsHashMap = {};
+        const itemsHashMap: any = {};
         listBoxNodeItems.forEach((item) => {
-          this.listBoxNodeItemsHashMap[item.value] = item.displayValue;
+          itemsHashMap[item.value] = item.displayValue;
         });
+        this.listBoxNodeItemsHashMap = itemsHashMap;
 
         this.selectedValues.forEach((selectedValue: any) => {
           // this.listBoxNode.selectIndex(listBoxNodeItemValues.indexOf(selectedValue));
@@ -407,7 +409,7 @@ export class TokenInputElement extends LitElement {
   }
 
   protected render() {
-    console.log(this.selectedValues);
+    console.log(this.listBoxNodeItemsHashMap);
     return html`
       <style>
         :host {
