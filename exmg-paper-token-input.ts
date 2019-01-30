@@ -119,7 +119,7 @@ export class TokenInputElement extends LitElement {
    * This field will be bind to the actual input field
    */
   @property({type: String})
-  public inputValue?: string = '';
+  private inputValue: string = '';
 
   @property({type: Boolean})
   public invalid: boolean = false;
@@ -151,14 +151,16 @@ export class TokenInputElement extends LitElement {
   constructor() {
     super();
     this.onIronInputKeyDown = this.onIronInputKeyDown.bind(this);
+    this.onIronInputValueChanged = this.onIronInputValueChanged.bind(this);
     this.onWindowClick = this.onWindowClick.bind(this);
-    this.resetInput = this.resetInput.bind(this);
-    this.computeAlwaysFloatLabel = this.computeAlwaysFloatLabel.bind(this);
     this.onPaperListBoxItemSelect = this.onPaperListBoxItemSelect.bind(this);
     this.onPaperListBoxItemDeselect = this.onPaperListBoxItemDeselect.bind(this);
     this.onInputContainerTap = this.onInputContainerTap.bind(this);
     this.onInputContainerButtonTap = this.onInputContainerButtonTap.bind(this);
     this.onPaperMenuVisibilityChanged = this.onPaperMenuVisibilityChanged.bind(this);
+
+    this.resetInput = this.resetInput.bind(this);
+    this.computeAlwaysFloatLabel = this.computeAlwaysFloatLabel.bind(this);
   }
 
   /**
@@ -173,33 +175,11 @@ export class TokenInputElement extends LitElement {
   //   return this.listBoxNode.items ? this.listBoxNode.items.indexOf(item) : -1;
   // }
 
-  // private updateSelectedTokens() {
-  //   this.selectedTokens = this.selectedItems.map((si) => {
-  //     const id = this.attrForSelected ? si.getAttribute(this.attrForSelected) : this.indexOf(si);
-  //     const text = this.selectedItemSelector ? si.querySelector(this.selectedItemSelector).textContent
-  //       : si.textContent;
-  //     return {id, text};
-  //   });
-  // }
-  //
   // private observeInputChange() {
   //   this.inputValueNode.style.width = (this.inputWidthHelperNode.offsetWidth + 10) + 'px';
   //   this.filterItems();
   // }
 
-  // private filterItems() {
-  //   const items = this.querySelectorAll('paper-item');
-  //   const inputValue = this.inputValue || '';
-  //   console.log('filterItems');
-  //
-  //   for (let i = 0; i < items.length; i = i + 1) {
-  //     if (inputValue.length > 0 && (items[i].textContent || '').indexOf(inputValue) === -1) {
-  //       items[i].setAttribute('hidden', '');
-  //     } else {
-  //       items[i].removeAttribute('hidden');
-  //     }
-  //   }
-  // }
 
   //////////////////
   /// EVENT HANDLERS
@@ -218,21 +198,27 @@ export class TokenInputElement extends LitElement {
   }
 
   private onIronInputKeyDown(e: KeyboardEvent): void {
-    this.inputValue = this.inputValue || '';
     switch (e.keyCode) {
       case BACKSPACE:
         this.selectedValues.splice(this.selectedValues.length - 1, 1);
+        this.requestUpdate();
         this.focus();
         break;
       case ARROWDOWN:
-        this.opened = true;
+        this.menuElement!.open();
         this.listBoxNode!.focus();
         break;
       default:
-        this.opened = true;
+        this.menuElement!.open();
         afterNextRender(this, _ => this.focus());
         break;
     }
+  }
+
+  private onIronInputValueChanged(e: Event): void {
+    this.inputValue = (<HTMLInputElement>e.target).value || '';
+    this.inputValueNode!.style.width = (this.inputWidthHelperNode!.offsetWidth + 10) + 'px';
+    this.filterItems();
   }
 
   private onPaperMenuVisibilityChanged(e: CustomEvent): void {
@@ -283,8 +269,17 @@ export class TokenInputElement extends LitElement {
   /////////////////////////
 
 
+  private filterItems() {
+    const items = this.querySelectorAll('paper-item');
 
-
+    for (let i = 0; i < items.length; i = i + 1) {
+      if (this.inputValue.length > 0 && (items[i].textContent || '').indexOf(this.inputValue) === -1) {
+        items[i].setAttribute('hidden', '');
+      } else {
+        items[i].removeAttribute('hidden');
+      }
+    }
+  }
 
   private getPaperItemValue(item: HTMLElement): any {
     if (this.attrForSelected) {
@@ -329,13 +324,14 @@ export class TokenInputElement extends LitElement {
   }
 
   private resetInput(): void {
-    this.opened = false;
+    this.menuElement!.close();
 
     if (this.autoValidate) {
       this.validate();
     }
 
     this.inputValue = '';
+    this.filterItems();
     this.focus();
   }
 
@@ -412,7 +408,7 @@ export class TokenInputElement extends LitElement {
   }
 
   protected render() {
-    console.log(this.listBoxNodeItemsHashMap);
+    // console.log(this.listBoxNodeItemsHashMap);
     return html`
       <style>
         :host {
@@ -501,6 +497,7 @@ export class TokenInputElement extends LitElement {
                 id="inputValue"
                 aria-labelledby="label"
                 value="${this.inputValue}"
+                @input="${this.onIronInputValueChanged}"
                 ?autofocus="${this.autofocus}"
                 autocomplete="off"
                 ?disabled="${this.disabled}"
