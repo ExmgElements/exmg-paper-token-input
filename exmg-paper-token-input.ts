@@ -10,6 +10,8 @@ import '@polymer/paper-input/paper-input-container.js';
 import '@polymer/paper-styles/paper-styles.js';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
 import './exmg-paper-token-input-icons';
+import {PaperMenuButton} from "@polymer/paper-menu-button/paper-menu-button";
+import {PaperListboxElement} from "@polymer/paper-listbox/paper-listbox";
 
 const BACKSPACE = 8;
 const ARROWDOWN = 40;
@@ -135,13 +137,16 @@ export class TokenInputElement extends LitElement {
   private listBoxNodeItemsHashMap: any = {};
 
   @query('#listbox')
-  private listBoxNode?: HTMLElement | any;
+  private listBoxNode?: PaperListboxElement;
 
   @query('#inputValue')
-  private inputValueNode?: HTMLElement | any;
+  private inputValueNode?: HTMLInputElement;
 
   @query('#inputWidthHelper')
-  private inputWidthHelperNode?: HTMLElement | any;
+  private inputWidthHelperNode?: HTMLElement;
+
+  @query('#menu')
+  private menuElement?: PaperMenuButton;
 
   constructor() {
     super();
@@ -196,73 +201,6 @@ export class TokenInputElement extends LitElement {
   //   }
   // }
 
-  public connectedCallback(): void {
-    super.connectedCallback();
-    /**
-     * @todo use promises
-     */
-    const intervalForInputValueNode = setInterval(() => {
-      if (this.inputValueNode) {
-        clearInterval(intervalForInputValueNode);
-
-        this.inputValueNode.addEventListener('keydown', this.onIronInputKeyDown);
-
-        const intervalForInputWidthHelperNode = setInterval(() => {
-          if (this.inputWidthHelperNode) {
-            this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode, null).cssText;
-            this.inputWidthHelperNode.style.position = 'absolute';
-            this.inputWidthHelperNode.style.top = '-999px';
-            this.inputWidthHelperNode.style.left = '0';
-            this.inputWidthHelperNode.style.padding = '0';
-            this.inputWidthHelperNode.style.width = 'auto';
-            this.inputWidthHelperNode.style['white-space'] = 'pre';
-
-            clearInterval(intervalForInputWidthHelperNode);
-          }
-        });
-      }
-    });
-
-    if (this.autoValidate) {
-      window.addEventListener('click', this.onWindowClick);
-    }
-
-    const intervalForListBoxNode = setInterval(() => {
-      if (this.listBoxNode) {
-        clearInterval(intervalForListBoxNode);
-
-        const listBoxNodeItems: { value: any, displayValue: any }[] = this.listBoxNode.items.map((item: HTMLElement) => {
-          return {
-            value: this.getPaperItemValue(item),
-            displayValue: item.textContent,
-          };
-        }).filter((value: any) => typeof value !== "undefined");
-
-        const listBoxNodeItemValues = listBoxNodeItems.map((item) => item.value);
-
-        const itemsHashMap: any = {};
-        listBoxNodeItems.forEach((item) => {
-          itemsHashMap[item.value] = item.displayValue;
-        });
-        this.listBoxNodeItemsHashMap = itemsHashMap;
-
-        this.selectedValues.forEach((selectedValue: any) => {
-          // this.listBoxNode.selectIndex(listBoxNodeItemValues.indexOf(selectedValue));
-        });
-      }
-    });
-  }
-
-  public disconnectedCallback(): void {
-    super.disconnectedCallback();
-
-    this.inputValueNode.removeEventListener('keydown', this.onIronInputKeyDown);
-
-    if (this.autoValidate) {
-      window.removeEventListener('click', this.onWindowClick);
-    }
-  }
-
   //////////////////
   /// EVENT HANDLERS
   //////////////////
@@ -288,7 +226,7 @@ export class TokenInputElement extends LitElement {
         break;
       case ARROWDOWN:
         this.opened = true;
-        this.listBoxNode.focus();
+        this.listBoxNode!.focus();
         break;
       default:
         this.opened = true;
@@ -308,8 +246,9 @@ export class TokenInputElement extends LitElement {
     };
   }
 
-  private onInputContainerTap(): void {
-    this.opened = true;
+  private onInputContainerTap(e: Event): void {
+    e.preventDefault();
+    this.menuElement!.open();
     afterNextRender(this, _ => this.focus());
   }
 
@@ -356,7 +295,7 @@ export class TokenInputElement extends LitElement {
   }
 
   public focus(): void {
-    this.inputValueNode.focus();
+    this.inputValueNode!.focus();
   }
 
   private emitItemSelectEvent(value: any): void {
@@ -406,6 +345,70 @@ export class TokenInputElement extends LitElement {
 
   private hasSelectedValues(): boolean {
     return this.selectedValues && this.selectedValues.length > 0;
+  }
+
+  /////////////////////////
+  /// LIT ELEMENT LIFECYCLE
+  /////////////////////////
+
+  public connectedCallback(): void {
+    super.connectedCallback();
+
+    const intervalForListBoxNode = setInterval(() => {
+      if (this.listBoxNode) {
+        clearInterval(intervalForListBoxNode);
+
+        const listBoxNodeItems: { value: any, displayValue: any }[] = (this.listBoxNode.items || []).map((item: HTMLElement) => {
+          return {
+            value: this.getPaperItemValue(item),
+            displayValue: item.textContent,
+          };
+        }).filter((value: any) => typeof value !== "undefined");
+
+        const listBoxNodeItemValues = listBoxNodeItems.map((item) => item.value);
+
+        const itemsHashMap: any = {};
+        listBoxNodeItems.forEach((item) => {
+          itemsHashMap[item.value] = item.displayValue;
+        });
+        this.listBoxNodeItemsHashMap = itemsHashMap;
+
+        this.selectedValues.forEach((selectedValue: any) => {
+          /**
+           * @todo
+           */
+          // this.listBoxNode!.selectIndex(listBoxNodeItemValues.indexOf(selectedValue));
+        });
+      }
+    });
+  }
+
+  public disconnectedCallback(): void {
+    super.disconnectedCallback();
+
+    this.inputValueNode!.removeEventListener('keydown', this.onIronInputKeyDown);
+
+    if (this.autoValidate) {
+      window.removeEventListener('click', this.onWindowClick);
+    }
+  }
+
+  protected firstUpdated(): void {
+    this.inputValueNode!.addEventListener('keydown', this.onIronInputKeyDown);
+
+    if (this.inputWidthHelperNode) {
+      this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode!, null).cssText;
+      this.inputWidthHelperNode.style.position = 'absolute';
+      this.inputWidthHelperNode.style.top = '-999px';
+      this.inputWidthHelperNode.style.left = '0';
+      this.inputWidthHelperNode.style.padding = '0';
+      this.inputWidthHelperNode.style.width = 'auto';
+      this.inputWidthHelperNode.style.whiteSpace = 'pre';
+    }
+
+    if (this.autoValidate) {
+      window.addEventListener('click', this.onWindowClick);
+    }
   }
 
   protected render() {
@@ -512,7 +515,8 @@ export class TokenInputElement extends LitElement {
       <span id="inputWidthHelper">${this.inputValue}</span>
 
       <paper-menu-button
-        close-on-activate=""
+        id="menu"
+        close-on-activate
         ?opened="${this.opened}"
         @opened-changed="${this.onPaperMenuVisibilityChanged}"
         vertical-offset="60"
@@ -525,34 +529,17 @@ export class TokenInputElement extends LitElement {
             ?data-opened="${this.opened}"
             slot="dropdown-trigger"
         ></paper-icon-button>
-        ${
-          this.attrForSelected ?
-            html`
-              <paper-listbox
-                id="listbox"
-                attr-for-selected="${this.attrForSelected}"
-                selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
-                slot="dropdown-content"
-                @iron-select="${this.onPaperListBoxItemSelect}"
-                @iron-deselect="${this.onPaperListBoxItemDeselect}"
-                multi=""
-              >
-                <slot></slot>
-              </paper-listbox>
-            ` :
-            html`
-              <paper-listbox
-                id="listbox"
-                selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
-                slot="dropdown-content"
-                @iron-select="${this.onPaperListBoxItemSelect}"
-                @iron-deselect="${this.onPaperListBoxItemDeselect}"
-                multi=""
-              >
-                <slot></slot>
-              </paper-listbox>
-            `
-        }
+        <paper-listbox
+          id="listbox"
+          attr-for-selected="${this.attrForSelected || ''}"
+          selectable="paper-item:not([hidden]),paper-icon-item:not([hidden])"
+          slot="dropdown-content"
+          @iron-select="${this.onPaperListBoxItemSelect}"
+          @iron-deselect="${this.onPaperListBoxItemDeselect}"
+          multi=""
+        >
+          <slot></slot>
+        </paper-listbox>
       </paper-menu-button>
   `;
   }
