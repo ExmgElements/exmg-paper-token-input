@@ -66,9 +66,6 @@ export class TokenInputElement extends LitElement {
   @property({type: Array, attribute: 'selected-values'})
   public selectedValues: any[] = []; // @todo migrate notify: true
 
-  @property({type: Array})
-  private internalSelectedValues: any[] = [];
-
   /**
    * The label for this input.
    */
@@ -147,14 +144,14 @@ export class TokenInputElement extends LitElement {
 
   constructor() {
     super();
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.onIronInputKeyDown = this.onIronInputKeyDown.bind(this);
     this.onWindowClick = this.onWindowClick.bind(this);
     this.resetInput = this.resetInput.bind(this);
+    this.computeAlwaysFloatLabel = this.computeAlwaysFloatLabel.bind(this);
     this.onPaperListBoxItemSelect = this.onPaperListBoxItemSelect.bind(this);
     this.onPaperListBoxItemDeselect = this.onPaperListBoxItemDeselect.bind(this);
     this.onInputContainerTap = this.onInputContainerTap.bind(this);
     this.onInputContainerButtonTap = this.onInputContainerButtonTap.bind(this);
-    this.computeAlwaysFloatLabel = this.computeAlwaysFloatLabel.bind(this);
     this.onPaperMenuVisibilityChanged = this.onPaperMenuVisibilityChanged.bind(this);
   }
 
@@ -169,18 +166,6 @@ export class TokenInputElement extends LitElement {
   //   console.log('indexOf', item);
   //   return this.listBoxNode.items ? this.listBoxNode.items.indexOf(item) : -1;
   // }
-
-  private previousClickWasInside: boolean = false;
-
-  private onWindowClick(e: MouseEvent): void {
-    const isInsideClick = !!e.composedPath().find((path) => path === this);
-
-    if (this.autoValidate && !isInsideClick && this.previousClickWasInside) {
-      this.validate();
-    }
-
-    this.previousClickWasInside = isInsideClick;
-  }
 
   // private updateSelectedTokens() {
   //   this.selectedTokens = this.selectedItems.map((si) => {
@@ -219,7 +204,7 @@ export class TokenInputElement extends LitElement {
       if (this.inputValueNode) {
         clearInterval(intervalForInputValueNode);
 
-        this.inputValueNode.addEventListener('keydown', this.handleKeyDown);
+        this.inputValueNode.addEventListener('keydown', this.onIronInputKeyDown);
 
         const intervalForInputWidthHelperNode = setInterval(() => {
           if (this.inputWidthHelperNode) {
@@ -266,25 +251,33 @@ export class TokenInputElement extends LitElement {
     });
   }
 
-  private getPaperItemValue(item: HTMLElement): any {
-    if (this.attrForSelected) {
-      return (<Attr>(item.attributes.getNamedItem(this.attrForSelected) || {})).value;
-    }
-
-    return item.textContent;
-  }
-
   public disconnectedCallback(): void {
     super.disconnectedCallback();
 
-    this.inputValueNode.removeEventListener('keydown', this.handleKeyDown);
+    this.inputValueNode.removeEventListener('keydown', this.onIronInputKeyDown);
 
     if (this.autoValidate) {
       window.removeEventListener('click', this.onWindowClick);
     }
   }
 
-  private handleKeyDown(e: KeyboardEvent): void {
+  //////////////////
+  /// EVENT HANDLERS
+  //////////////////
+
+  private previousClickWasInside: boolean = false;
+
+  private onWindowClick(e: MouseEvent): void {
+    const isInsideClick = !!e.composedPath().find((path) => path === this);
+
+    if (this.autoValidate && !isInsideClick && this.previousClickWasInside) {
+      this.validate();
+    }
+
+    this.previousClickWasInside = isInsideClick;
+  }
+
+  private onIronInputKeyDown(e: KeyboardEvent): void {
     this.inputValue = this.inputValue || '';
     switch (e.keyCode) {
       case BACKSPACE:
@@ -313,8 +306,71 @@ export class TokenInputElement extends LitElement {
     };
   }
 
+  private onInputContainerTap(): void {
+    this.opened = true;
+    afterNextRender(this, _ => this.focus());
+  }
+
+  private onPaperListBoxItemSelect(e: CustomEvent): void {
+    if (this.maxTokens && this.selectedValues.length >= this.maxTokens) {
+      e.stopPropagation();
+    } else {
+      const value = this.getPaperItemValue(e.detail.item);
+
+      if (this.selectedValues.indexOf(value) === -1) {
+        this.selectedValues.push(value);
+        this.emitItemSelectEvent(value);
+      }
+    }
+
+    this.resetInput();
+  }
+
+  private onPaperListBoxItemDeselect(e: CustomEvent): void {
+    const value = this.getPaperItemValue(e.detail.item);
+
+    if (this.selectedValues.indexOf(value) !== -1) {
+      this.selectedValues.splice(this.selectedValues.indexOf(value), 1);
+      this.emitItemDeselectEvent(value);
+    }
+
+    this.resetInput();
+  }
+
+  /////////////////////////
+  /// END OF EVENT HANDLERS
+  /////////////////////////
+
+
+
+
+
+  private getPaperItemValue(item: HTMLElement): any {
+    if (this.attrForSelected) {
+      return (<Attr>(item.attributes.getNamedItem(this.attrForSelected) || {})).value;
+    }
+
+    return item.textContent;
+  }
+
   public focus(): void {
     this.inputValueNode.focus();
+  }
+
+  private emitItemSelectEvent(value: any): void {
+    this.dispatchEvent(new CustomEvent('value-select', {
+      detail: value,
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
+  private emitItemDeselectEvent(value: any): void {
+    this.dispatchEvent(new CustomEvent('value-deselect', {
+      detail: value,
+      bubbles: true,
+      composed: true,
+    }));
   }
 
   /**
@@ -329,28 +385,6 @@ export class TokenInputElement extends LitElement {
 
     // return !(selectedItemsChanges.base !== undefined && selectedItemsChanges.base.length === 0
     //   && this.inputValueNode !== document.activeElement);
-  }
-
-  private onInputContainerTap(): void {
-    this.opened = true;
-    afterNextRender(this, _ => this.focus());
-  }
-
-  private onPaperListBoxItemSelect(e: CustomEvent): void {
-    console.log('onPaperListBoxItemSelect', e);
-    if (this.maxTokens && this.selectedValues.length >= this.maxTokens) {
-      e.stopPropagation();
-    } else {
-      this.selectedValues.push(this.getPaperItemValue(e.detail.item))
-    }
-
-    this.resetInput();
-  }
-
-  private onPaperListBoxItemDeselect(e: CustomEvent): void {
-    this.selectedValues.splice(this.selectedValues.indexOf(this.getPaperItemValue(e.detail.item)), 1);
-
-    this.resetInput();
   }
 
   private resetInput(): void {
