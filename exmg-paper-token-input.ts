@@ -1,4 +1,4 @@
-import {customElement, html, LitElement, property, query} from 'lit-element';
+import {customElement, html, LitElement, property, PropertyValues, query} from 'lit-element';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -170,16 +170,14 @@ export class TokenInputElement extends LitElement {
    * @param {Object} item
    * @returns Returns the index of the item
    */
-  // indexOf(item: any) {
-  //   console.log('indexOf', item);
-  //   return this.listBoxNode.items ? this.listBoxNode.items.indexOf(item) : -1;
-  // }
+  indexOf(item: HTMLElement): number {
+    return this.listBoxNode!.items ? (this.listBoxNode!.items || []).indexOf(item) : -1;
+  }
 
   // private observeInputChange() {
   //   this.inputValueNode.style.width = (this.inputWidthHelperNode.offsetWidth + 10) + 'px';
   //   this.filterItems();
   // }
-
 
   //////////////////
   /// EVENT HANDLERS
@@ -255,6 +253,7 @@ export class TokenInputElement extends LitElement {
   }
 
   private onPaperListBoxItemDeselect(e: CustomEvent): void {
+    console.log('onPaperListBoxItemDeselect');
     const value = this.getPaperItemValue(e.detail.item);
 
     if (this.selectedValues.indexOf(value) !== -1) {
@@ -282,12 +281,8 @@ export class TokenInputElement extends LitElement {
     }
   }
 
-  private getPaperItemValue(item: HTMLElement): any {
-    if (this.attrForSelected) {
-      return (<Attr>(item.attributes.getNamedItem(this.attrForSelected) || {})).value;
-    }
-
-    return item.textContent;
+  private getPaperItemValue(item: HTMLElement): number|string|undefined {
+    return this.attrForSelected ? item.getAttribute(this.attrForSelected) || undefined : this.indexOf(item);
   }
 
   public focus(): void {
@@ -351,8 +346,6 @@ export class TokenInputElement extends LitElement {
   public connectedCallback(): void {
     super.connectedCallback();
 
-    this.selectedValues = this.selectedValues.map(value => value.toString());
-
     const intervalForListBoxNode = setInterval(() => {
       if (this.listBoxNode) {
         clearInterval(intervalForListBoxNode);
@@ -392,6 +385,15 @@ export class TokenInputElement extends LitElement {
     }
   }
 
+  protected update(changedProperties: PropertyValues): void {
+    if (changedProperties.has('selectedValues') && this.attrForSelected) {
+      console.log('update', this.selectedValues, changedProperties.get('selectedValues'));
+      this.selectedValues = this.selectedValues.map(value => value.toString());
+    }
+
+    super.update(changedProperties);
+  }
+
   protected firstUpdated(): void {
     this.inputValueNode!.addEventListener('keydown', this.onIronInputKeyDown);
 
@@ -410,8 +412,15 @@ export class TokenInputElement extends LitElement {
     }
   }
 
+  protected updated(_changedProperties: PropertyValues): void {
+    if (_changedProperties.has('selectedValues') && this.attrForSelected) {
+      console.log('updated', this.selectedValues, _changedProperties.get('selectedValues'));
+    }
+  }
+
   protected render() {
     // console.log(this.listBoxNodeItemsHashMap);
+    console.log(this.selectedValues);
     return html`
       <style>
         :host {

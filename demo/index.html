@@ -24,9 +24,17 @@
   <body>
     <div class="vertical-section-container centered">
       <h3>Basic exmg-paper-token-input demo</h3>
+      <script>
+        function add() {
+          console.log('add');
+          document.querySelector('exmg-paper-token-input').selectedValues = [1,4];
+        }
+
+        window.add = add;
+      </script>
       <demo-snippet>
         <template>
-          <exmg-paper-token-input label="Select Users">
+          <exmg-paper-token-input label="Select Users" selected-values="[2,3]">
             <paper-item>Rubin</paper-item>
             <paper-item>Gennie</paper-item>
             <paper-item>Ronna</paper-item>
@@ -54,23 +62,23 @@
         </template>
       </demo-snippet>
 
-      <!--<h3>Example Max 2 tokens</h3>-->
-      <!--<demo-snippet>-->
-        <!--<template>-->
-          <!--<exmg-paper-token-input label="Select Users" max-tokens="2">-->
-            <!--<paper-item>Rubin</paper-item>-->
-            <!--<paper-item>Gennie</paper-item>-->
-            <!--<paper-item>Ronna</paper-item>-->
-            <!--<paper-item>Jacquie</paper-item>-->
-            <!--<paper-item>Norene</paper-item>-->
-            <!--<paper-item>Beatris</paper-item>-->
-            <!--<paper-item>Ginny</paper-item>-->
-            <!--<paper-item>Tiesha</paper-item>-->
-            <!--<paper-item>Leonore</paper-item>-->
-            <!--<paper-item>Evonne</paper-item>-->
-          <!--</exmg-paper-token-input>-->
-        <!--</template>-->
-      <!--</demo-snippet>-->
+      <h3>Example Max 2 tokens</h3>
+      <demo-snippet>
+        <template>
+          <exmg-paper-token-input label="Select Users" max-tokens="2">
+            <paper-item>Rubin</paper-item>
+            <paper-item>Gennie</paper-item>
+            <paper-item>Ronna</paper-item>
+            <paper-item>Jacquie</paper-item>
+            <paper-item>Norene</paper-item>
+            <paper-item>Beatris</paper-item>
+            <paper-item>Ginny</paper-item>
+            <paper-item>Tiesha</paper-item>
+            <paper-item>Leonore</paper-item>
+            <paper-item>Evonne</paper-item>
+          </exmg-paper-token-input>
+        </template>
+      </demo-snippet>
 
       <!--<h3>Example paper icon item</h3>-->
       <!--<demo-snippet>-->
