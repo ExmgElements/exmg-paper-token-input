@@ -14,6 +14,7 @@ import {PaperMenuButton} from "@polymer/paper-menu-button/paper-menu-button";
 import {PaperListboxElement} from "@polymer/paper-listbox/paper-listbox";
 
 const BACKSPACE = 8;
+const ESCAPE = 27;
 const ARROWDOWN = 40;
 
 /**
@@ -77,7 +78,7 @@ export class TokenInputElement extends LitElement {
   /**
    * Set to true to auto-validate the input value.
    */
-  @property({type: Boolean})
+  @property({type: Boolean, attribute: 'auto-validate'})
   public autoValidate: boolean = false;
 
   @property({type: Boolean})
@@ -92,7 +93,7 @@ export class TokenInputElement extends LitElement {
   /**
    * The error message to display when the input is invalid.
    */
-  @property({type: String})
+  @property({type: String, attribute: 'error-message'})
   public errorMessage?: string;
 
   /**
@@ -206,6 +207,8 @@ export class TokenInputElement extends LitElement {
         this.menuElement!.open();
         this.listBoxNode!.focus();
         break;
+      case ESCAPE:
+        break;
       default:
         this.menuElement!.open();
         afterNextRender(this, _ => this.focus());
@@ -272,7 +275,7 @@ export class TokenInputElement extends LitElement {
     const items = this.querySelectorAll('paper-item');
 
     for (let i = 0; i < items.length; i = i + 1) {
-      if (this.inputValue.length > 0 && (items[i].textContent || '').indexOf(this.inputValue) === -1) {
+      if (this.inputValue.length > 0 && (items[i].textContent || '').toLowerCase().indexOf(this.inputValue.toLowerCase()) === -1) {
         items[i].setAttribute('hidden', '');
       } else {
         items[i].removeAttribute('hidden');
@@ -331,6 +334,7 @@ export class TokenInputElement extends LitElement {
   }
 
   private validate(): void {
+    console.log(this.required, this.selectedValues, this.selectedValues.length > 0);
     this.invalid = this.required && !this.hasSelectedValues();
   }
 
@@ -413,7 +417,7 @@ export class TokenInputElement extends LitElement {
 
   protected render() {
     // console.log(this.listBoxNodeItemsHashMap);
-    console.log(this.selectedValues);
+    console.log('this.invalid', this.invalid);
     return html`
       <!--suppress CssUnresolvedCustomPropertySet, CssUnresolvedCustomProperty -->
       <style>
