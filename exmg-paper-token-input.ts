@@ -59,7 +59,7 @@ export class TokenInputElement extends LitElement {
    * you probably want an alternative. The selector can be used to be a bit more
    * specific on which element can be used for display purposes.
    */
-  @property({type: String})
+  @property({type: String, attribute: 'selected-item-selector'})
   public selectedItemSelector?: string;
 
   /**
@@ -349,10 +349,10 @@ export class TokenInputElement extends LitElement {
       if (this.listBoxNode) {
         clearInterval(intervalForListBoxNode);
 
-        const listBoxNodeItems: { value: any, displayValue: any }[] = (this.listBoxNode.items || []).map((item: HTMLElement) => {
+        const listBoxNodeItems: { value: any; displayValue: any }[] = (this.listBoxNode.items || []).map((item: HTMLElement) => {
           return {
             value: this.getPaperItemValue(item),
-            displayValue: item.textContent,
+            displayValue: this.selectedItemSelector ? item.querySelector(this.selectedItemSelector)!.textContent : item.textContent,
           };
         }).filter((value: any) => typeof value !== "undefined");
 
