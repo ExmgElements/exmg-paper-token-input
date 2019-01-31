@@ -1,4 +1,5 @@
 import {customElement, html, LitElement, property, PropertyValues, query} from 'lit-element';
+import {repeat} from 'lit-html/directives/repeat';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -134,9 +135,6 @@ export class TokenInputElement extends LitElement {
   @property({type: Array})
   private selectedItems: any[] = []; // migrate notify: true
 
-  @property({type: Object})
-  private listBoxNodeItemsHashMap: any = {};
-
   @query('#listbox')
   private listBoxNode?: PaperListboxElement;
 
@@ -157,6 +155,7 @@ export class TokenInputElement extends LitElement {
     this.onPaperListBoxItemSelect = this.onPaperListBoxItemSelect.bind(this);
     this.onPaperListBoxItemDeselect = this.onPaperListBoxItemDeselect.bind(this);
     this.onInputContainerTap = this.onInputContainerTap.bind(this);
+    this.onInputFocusChanged = this.onInputFocusChanged.bind(this);
     this.onInputContainerButtonTap = this.onInputContainerButtonTap.bind(this);
     this.onPaperMenuVisibilityChanged = this.onPaperMenuVisibilityChanged.bind(this);
 
@@ -234,6 +233,10 @@ export class TokenInputElement extends LitElement {
     afterNextRender(this, _ => this.focus());
   }
 
+  private onInputFocusChanged(e: CustomEvent): void {
+    this.inputFocused = e.detail.value;
+  }
+
   private onPaperListBoxItemSelect(e: CustomEvent): void {
     if (this.maxTokens && this.selectedValues.length >= this.maxTokens) {
       e.stopPropagation();
@@ -302,18 +305,16 @@ export class TokenInputElement extends LitElement {
     }));
   }
 
-  /**
-   * This method will automatically set the label float.
-   */
-  private computeAlwaysFloatLabel(selectedItems, alwaysFloatLabel) {
-    if (alwaysFloatLabel) {
+  private computeAlwaysFloatLabel() {
+    if (this.alwaysFloatLabel) {
       return true;
     }
-    return !(selectedItems !== undefined && selectedItems.length === 0
-      && this.inputValueNode !== document.activeElement);
 
-    // return !(selectedItemsChanges.base !== undefined && selectedItemsChanges.base.length === 0
-    //   && this.inputValueNode !== document.activeElement);
+    return (
+        (this.selectedValues && this.selectedValues.length > 0)
+        || this.inputValue
+        || this.inputValueNode === this.shadowRoot!.activeElement
+    );
   }
 
   private resetInput(): void {
@@ -340,38 +341,6 @@ export class TokenInputElement extends LitElement {
   /////////////////////////
   /// LIT ELEMENT LIFECYCLE
   /////////////////////////
-
-  public connectedCallback(): void {
-    super.connectedCallback();
-
-    const intervalForListBoxNode = setInterval(() => {
-      if (this.listBoxNode) {
-        clearInterval(intervalForListBoxNode);
-
-        const listBoxNodeItems: { value: any; displayValue: any }[] = (this.listBoxNode.items || []).map((item: HTMLElement) => {
-          return {
-            value: this.getPaperItemValue(item),
-            displayValue: this.selectedItemSelector ? item.querySelector(this.selectedItemSelector)!.textContent : item.textContent,
-          };
-        }).filter((value: any) => typeof value !== "undefined");
-
-        const listBoxNodeItemValues = listBoxNodeItems.map((item) => item.value);
-
-        const itemsHashMap: any = {};
-        listBoxNodeItems.forEach((item) => {
-          itemsHashMap[item.value] = item.displayValue;
-        });
-        this.listBoxNodeItemsHashMap = itemsHashMap;
-
-        this.selectedValues.forEach((selectedValue: any) => {
-          /**
-           * @todo
-           */
-          // this.listBoxNode!.selectIndex(listBoxNodeItemValues.indexOf(selectedValue));
-        });
-      }
-    });
-  }
 
   public disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -410,9 +379,20 @@ export class TokenInputElement extends LitElement {
     }
   }
 
+  private getSelectedItems() {
+    if (!this.listBoxNode) return [];
+
+    return this.listBoxNode!.items!
+        .map((item: HTMLElement) => {
+          return {
+            id: this.getPaperItemValue(item),
+            text: this.selectedItemSelector ? item.querySelector(this.selectedItemSelector)!.textContent : item.textContent,
+          };
+        })
+        .filter((item: { id: any; text: any }) => this.selectedValues.includes(item.id));
+  }
+
   protected render() {
-    // console.log(this.listBoxNodeItemsHashMap);
-    console.log('this.invalid', this.invalid);
     return html`
       <!--suppress CssUnresolvedCustomPropertySet, CssUnresolvedCustomProperty -->
       <style>
@@ -477,8 +457,9 @@ export class TokenInputElement extends LitElement {
       </style>
 
       <paper-input-container
-        always-float-label="${this.computeAlwaysFloatLabel(this.selectedItems, this.alwaysFloatLabel)}"
+        ?always-float-label="${this.computeAlwaysFloatLabel()}"
         @tap=${this.onInputContainerTap}
+        @focused-changed="${this.onInputFocusChanged}"
         ?disabled="${this.disabled}"
         ?focused="${this.inputFocused}"
         ?invalid="${this.invalid}"
@@ -488,15 +469,18 @@ export class TokenInputElement extends LitElement {
         <div slot="input" class="paper-input-input" bind-value="${this.inputValue}">
           <span class="tokens">
             ${
-                this.selectedValues.map((value) => {
-                  return html`
-                    <paper-button tabindex="-1" @tap="${this.onInputContainerButtonTap(value)}">
-                      <span>${this.listBoxNodeItemsHashMap[value]}</span>
-                      <iron-icon icon="exmg-paper-token-input-icons:clear"></iron-icon>
-                    </paper-button>
-                  `;
-                })
+              repeat(
+                  this.getSelectedItems(),
+                  item => item.id,
+                  (item) => html`
+                      <paper-button tabindex="-1" @tap="${this.onInputContainerButtonTap(item.id)}">
+                        <span>${item.text}</span>
+                        <iron-icon icon="exmg-paper-token-input-icons:clear"></iron-icon>
+                      </paper-button>
+                  `
+              )
             }
+
             <iron-input bind-value="${this.inputValue}">
               <input
                 id="inputValue"
