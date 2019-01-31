@@ -243,11 +243,11 @@ export class TokenInputElement extends LitElement {
       if (this.selectedValues.indexOf(value) === -1) {
         this.selectedValues.push(value);
         this.emitItemSelectEvent(value);
-        this.requestUpdate();
+        this.resetInput();
       }
     }
 
-    this.resetInput();
+    this.requestUpdate();
   }
 
   private onPaperListBoxItemDeselect(e: CustomEvent): void {
