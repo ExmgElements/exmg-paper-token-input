@@ -175,11 +175,6 @@ export class TokenInputElement extends LitElement {
     return this.listBoxNode!.items ? (this.listBoxNode!.items || []).indexOf(item) : -1;
   }
 
-  // private observeInputChange() {
-  //   this.inputValueNode.style.width = (this.inputWidthHelperNode.offsetWidth + 10) + 'px';
-  //   this.filterItems();
-  // }
-
   //////////////////
   /// EVENT HANDLERS
   //////////////////
