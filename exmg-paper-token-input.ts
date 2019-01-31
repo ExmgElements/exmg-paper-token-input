@@ -104,7 +104,7 @@ export class TokenInputElement extends LitElement {
   /**
    * Maximum number of tokens allowed in value
    */
-  @property({type: Number})
+  @property({type: Number, attribute: 'max-tokens'})
   public maxTokens?: number;
 
   /**
@@ -215,7 +215,7 @@ export class TokenInputElement extends LitElement {
 
   private onIronInputValueChanged(e: Event): void {
     this.inputValue = (<HTMLInputElement>e.target).value || '';
-    this.inputValueNode!.style.width = (this.inputWidthHelperNode!.offsetWidth + 10) + 'px';
+    this.inputValueNode!.style.width = `${this.inputWidthHelperNode!.offsetWidth + 10}px`;
     this.filterItems();
   }
 
@@ -267,7 +267,6 @@ export class TokenInputElement extends LitElement {
   /////////////////////////
   /// END OF EVENT HANDLERS
   /////////////////////////
-
 
   private filterItems() {
     const items = this.querySelectorAll('paper-item');
@@ -398,7 +397,7 @@ export class TokenInputElement extends LitElement {
     this.inputValueNode!.addEventListener('keydown', this.onIronInputKeyDown);
 
     if (this.inputWidthHelperNode) {
-      this.inputWidthHelperNode.style = window.getComputedStyle(this.inputValueNode!, null).cssText;
+      this.inputWidthHelperNode.style.cssText = window.getComputedStyle(this.inputValueNode!, null).cssText;
       this.inputWidthHelperNode.style.position = 'absolute';
       this.inputWidthHelperNode.style.top = '-999px';
       this.inputWidthHelperNode.style.left = '0';
@@ -412,16 +411,11 @@ export class TokenInputElement extends LitElement {
     }
   }
 
-  protected updated(_changedProperties: PropertyValues): void {
-    if (_changedProperties.has('selectedValues') && this.attrForSelected) {
-      console.log('updated', this.selectedValues, _changedProperties.get('selectedValues'));
-    }
-  }
-
   protected render() {
     // console.log(this.listBoxNodeItemsHashMap);
     console.log(this.selectedValues);
     return html`
+      <!--suppress CssUnresolvedCustomPropertySet, CssUnresolvedCustomProperty -->
       <style>
         :host {
           display: block;
