@@ -192,7 +192,7 @@ export class TokenInputElement extends LitElement {
       case BACKSPACE:
         this.selectedValues.splice(this.selectedValues.length - 1, 1);
         this.requestUpdate();
-        this.focus();
+        this.focusInputValue();
         break;
       case ARROWDOWN:
         this.menuElement!.open();
@@ -202,7 +202,7 @@ export class TokenInputElement extends LitElement {
         break;
       default:
         this.menuElement!.open();
-        afterNextRender(this, _ => this.focus());
+        afterNextRender(this, _ => this.focusInputValue());
         break;
     }
   }
@@ -220,14 +220,14 @@ export class TokenInputElement extends LitElement {
   private onInputContainerButtonTap(value: any): () => void {
     return () => {
       this.selectedValues.splice(this.selectedValues.indexOf(value), 1);
-      this.focus();
+      this.focusInputValue();
     };
   }
 
   private onInputContainerTap(e: Event): void {
     e.preventDefault();
     this.menuElement!.open();
-    afterNextRender(this, _ => this.focus());
+    afterNextRender(this, _ => this.focusInputValue());
   }
 
   private onInputFocusChanged(e: CustomEvent): void {
@@ -282,7 +282,7 @@ export class TokenInputElement extends LitElement {
     return this.attrForSelected ? item.getAttribute(this.attrForSelected) || undefined : this.indexOf(item);
   }
 
-  public focus(): void {
+  private focusInputValue(): void {
     this.inputValueNode!.focus();
   }
 
@@ -323,7 +323,7 @@ export class TokenInputElement extends LitElement {
 
     this.inputValue = '';
     this.filterItems();
-    this.focus();
+    this.focusInputValue();
   }
 
   private validate(): void {
