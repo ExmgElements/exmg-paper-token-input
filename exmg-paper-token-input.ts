@@ -132,9 +132,6 @@ export class TokenInputElement extends LitElement {
   @property({type: Boolean})
   private opened: boolean = false;
 
-  @property({type: Array})
-  private selectedItems: any[] = []; // migrate notify: true
-
   @query('#listbox')
   private listBoxNode?: PaperListboxElement;
 
@@ -313,7 +310,7 @@ export class TokenInputElement extends LitElement {
     return (
         (this.selectedValues && this.selectedValues.length > 0)
         || this.inputValue
-        || this.inputValueNode === this.shadowRoot!.activeElement
+        || this.inputFocused
     );
   }
 
