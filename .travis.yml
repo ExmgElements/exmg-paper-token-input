@@ -8,7 +8,7 @@ cache:
 
 install:
   - npm install
-  - tsc
+  - npm i polymer-cli
 
 before_script:
   - tslint -c ./tslint.json --project ./
