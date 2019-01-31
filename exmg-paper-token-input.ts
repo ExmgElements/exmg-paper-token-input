@@ -10,8 +10,8 @@ import '@polymer/paper-input/paper-input-container.js';
 import '@polymer/paper-styles/paper-styles.js';
 import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
 import './exmg-paper-token-input-icons';
-import {PaperMenuButton} from "@polymer/paper-menu-button/paper-menu-button";
-import {PaperListboxElement} from "@polymer/paper-listbox/paper-listbox";
+import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button';
+import {PaperListboxElement} from '@polymer/paper-listbox/paper-listbox';
 
 const BACKSPACE = 8;
 const ESCAPE = 27;
