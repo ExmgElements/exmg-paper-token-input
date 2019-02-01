@@ -167,15 +167,14 @@ export class PaperTokenInputElement extends LitElement {
     this.computeAlwaysFloatLabel = this.computeAlwaysFloatLabel.bind(this);
   }
 
-  /**
-   * Returns the index of the given item.
-   *
-   * @method indexOf
-   * @param {Object} item
-   * @returns Returns the index of the item
-   */
-  indexOf(item: HTMLElement): number {
+  private indexOfItem(item: HTMLElement): number {
     return this.listBoxNode!.items ? (this.listBoxNode!.items || []).indexOf(item) : -1;
+  }
+
+  private indexOfValue(value: SelectedValue): number {
+    return this.listBoxNode!.items!
+        .map((item: HTMLElement) => this.getPaperItemValue(item))
+        .indexOf(value);
   }
 
   /** EVENT HANDLERS */
@@ -193,17 +192,20 @@ export class PaperTokenInputElement extends LitElement {
   }
 
   private onIronInputKeyDown(e: KeyboardEvent): void {
-    switch (e.keyCode) {
+    switch (e.code || e.keyCode) {
       case BACKSPACE:
-        this.selectedValues.splice(this.selectedValues.length - 1, 1);
+      case 'Backspace':
+        this.listBoxNode!.selectIndex(this.indexOfValue(this.selectedValues[this.selectedValues.length - 1]));
         this.requestUpdate();
         this.focusInputValue();
         break;
       case ARROWDOWN:
+      case 'ArrowDown':
         this.menuElement!.open();
         this.listBoxNode!.focus();
         break;
       case ESCAPE:
+      case 'Esc':
         break;
       default:
         this.menuElement!.open();
@@ -247,7 +249,7 @@ export class PaperTokenInputElement extends LitElement {
 
       if (this.selectedValues.indexOf(value) === -1) {
         this.selectedValues.push(value);
-        this.emitItemSelectEvent(value);
+        this.emitItemSelectEvent(value, e.detail.item);
         this.resetInput();
       }
     }
@@ -260,7 +262,7 @@ export class PaperTokenInputElement extends LitElement {
 
     if (this.selectedValues.indexOf(value) !== -1) {
       this.selectedValues.splice(this.selectedValues.indexOf(value), 1);
-      this.emitItemDeselectEvent(value);
+      this.emitItemDeselectEvent(value, e.detail.item);
     }
 
     this.resetInput();
@@ -270,20 +272,22 @@ export class PaperTokenInputElement extends LitElement {
 
   /** HELPERS */
 
-  private emitItemSelectEvent(value: SelectedValue): void {
+  private emitItemSelectEvent(value: SelectedValue, item: HTMLElement): void {
     this.dispatchEvent(new CustomEvent('exmg-token-input-select', {
       detail: {
         value,
+        item,
       },
       bubbles: true,
       composed: true,
     }));
   }
 
-  private emitItemDeselectEvent(value: SelectedValue): void {
+  private emitItemDeselectEvent(value: SelectedValue, item: HTMLElement): void {
     this.dispatchEvent(new CustomEvent('exmg-token-input-deselect', {
       detail: {
         value,
+        item,
       },
       bubbles: true,
       composed: true,
@@ -303,7 +307,7 @@ export class PaperTokenInputElement extends LitElement {
   }
 
   private getPaperItemValue(item: HTMLElement): number|string|undefined {
-    return this.attrForSelected ? item.getAttribute(this.attrForSelected) || undefined : this.indexOf(item);
+    return this.attrForSelected ? item.getAttribute(this.attrForSelected) || undefined : this.indexOfItem(item);
   }
 
   private focusInputValue(): void {
@@ -334,7 +338,7 @@ export class PaperTokenInputElement extends LitElement {
     this.focusInputValue();
   }
 
-  private validate(): void {
+  public validate(): void {
     this.invalid =
         this.required
         && !this.hasSelectedValues();
@@ -349,12 +353,16 @@ export class PaperTokenInputElement extends LitElement {
 
     return this.listBoxNode!.items!
         .map((item: HTMLElement) => {
+          const id = this.getPaperItemValue(item);
+
           return {
             id: this.getPaperItemValue(item),
             text: (this.selectedItemSelector ? item.querySelector(this.selectedItemSelector)!.textContent : item.textContent) || '',
+            sortWeight: this.selectedValues.indexOf(id),
           };
         })
-        .filter((item: { id: SelectedValue; text: string }) => this.selectedValues.includes(item.id));
+        .filter((item: { id: SelectedValue; text: string }) => this.selectedValues.includes(item.id))
+        .sort((itemA: { sortWeight: number }, itemB: { sortWeight: number }) => { return itemA.sortWeight - itemB.sortWeight; });
   }
 
   /** END OF HELPERS */
