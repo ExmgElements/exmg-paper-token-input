@@ -135,9 +135,8 @@ suite('<exmg-paper-token-input>', function () {
 
   suite('element should follow required constraint', function () {
     const makeElementTouched = async (targetElement: HTMLElement): Promise<void> => {
-      console.log(targetElement);
       targetElement.click();
-      // targetElement.parentElement!.click();
+      targetElement.parentElement!.click();
       await flushCompleted();
     };
 
@@ -158,19 +157,24 @@ suite('<exmg-paper-token-input>', function () {
       chai.assert.equal(inputError.innerText, 'Input required', 'Error message is visible');
     });
 
-    // test('element should became valid after selection', async () => {
-    //   await flushCompleted(); // wait for event listeners
-    //   await makeElementTouched(element);
-    //
-    //   chai.assert.isTrue(element.invalid, 'Should be invalid');
-    //
-    //   const eventPromise = onExmgTokenInputSelected(element);
-    //   await makeElementTouched(element);
-    //   await eventPromise;
-    //   chai.assert.isFalse(element.invalid, 'Should be valid');
-    //   const inputError = element.shadowRoot!.querySelector('paper-input-error')!;
-    //   chai.assert.equal(inputError.innerText, '', 'Error message is not visible');
-    // });
+    test('element should became valid after selection', async () => {
+      await flushCompleted(); // wait for event listeners
+      await makeElementTouched(element);
+
+      chai.assert.isTrue(element.invalid, 'Should be invalid');
+
+      const elementShadowRoot = element.shadowRoot!;
+      const listBox = elementShadowRoot.querySelector('paper-listbox');
+
+      const eventPromise = onExmgTokenInputSelected(element);
+      listBox!.select('0');
+
+      await eventPromise;
+
+      chai.assert.isFalse(element.invalid, 'Should be valid');
+      const inputError = element.shadowRoot!.querySelector('paper-input-error')!;
+      chai.assert.equal(inputError.innerText, '', 'Error message is not visible');
+    });
 
     test('element with auto-validate off should not be invalid', async () => {
       element.autoValidate = false;
