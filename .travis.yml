@@ -21,6 +21,6 @@ addons:
       - google-chrome-stable
 
 script:
-  - xvfb-run polymer test --npm --expanded
+  - xvfb-run polymer test -l chrome
 
 dist: trusty
