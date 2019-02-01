@@ -18,6 +18,13 @@ const BACKSPACE = 8;
 const ESCAPE = 27;
 const ARROWDOWN = 40;
 
+type SelectedValue = string|number|undefined;
+
+type SelectedItem = {
+  id: SelectedValue;
+  text: string;
+};
+
 /**
  * `exmg-paper-token-input` is an paper style token input element"
  *
@@ -68,7 +75,7 @@ export class TokenInputElement extends LitElement {
    * Gets or sets the selected elements.
    */
   @property({type: Array, attribute: 'selected-values'})
-  public selectedValues: any[] = []; // @todo migrate notify: true
+  public selectedValues: SelectedValue[] = []; // @todo migrate notify: true
 
   /**
    * The label for this input.
@@ -171,9 +178,7 @@ export class TokenInputElement extends LitElement {
     return this.listBoxNode!.items ? (this.listBoxNode!.items || []).indexOf(item) : -1;
   }
 
-  //////////////////
-  /// EVENT HANDLERS
-  //////////////////
+  /** EVENT HANDLERS */
 
   private previousClickWasInside: boolean = false;
 
@@ -217,7 +222,7 @@ export class TokenInputElement extends LitElement {
     this.opened = e.detail.value;
   }
 
-  private onInputContainerButtonTap(value: any): () => void {
+  private onInputContainerButtonTap(value: SelectedValue): () => void {
     return () => {
       this.selectedValues.splice(this.selectedValues.indexOf(value), 1);
       this.focusInputValue();
@@ -251,7 +256,6 @@ export class TokenInputElement extends LitElement {
   }
 
   private onPaperListBoxItemDeselect(e: CustomEvent): void {
-    console.log('onPaperListBoxItemDeselect');
     const value = this.getPaperItemValue(e.detail.item);
 
     if (this.selectedValues.indexOf(value) !== -1) {
@@ -262,9 +266,29 @@ export class TokenInputElement extends LitElement {
     this.resetInput();
   }
 
-  /////////////////////////
-  /// END OF EVENT HANDLERS
-  /////////////////////////
+  /** END OF EVENT HANDLERS */
+
+  /** HELPERS */
+
+  private emitItemSelectEvent(value: SelectedValue): void {
+    this.dispatchEvent(new CustomEvent('value-select', {
+      detail: {
+        value,
+      },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
+  private emitItemDeselectEvent(value: SelectedValue): void {
+    this.dispatchEvent(new CustomEvent('value-deselect', {
+      detail: {
+        value,
+      },
+      bubbles: true,
+      composed: true,
+    }));
+  }
 
   private filterItems() {
     const items = this.querySelectorAll('paper-item');
@@ -286,29 +310,13 @@ export class TokenInputElement extends LitElement {
     this.inputValueNode!.focus();
   }
 
-  private emitItemSelectEvent(value: any): void {
-    this.dispatchEvent(new CustomEvent('value-select', {
-      detail: value,
-      bubbles: true,
-      composed: true,
-    }));
-  }
-
-  private emitItemDeselectEvent(value: any): void {
-    this.dispatchEvent(new CustomEvent('value-deselect', {
-      detail: value,
-      bubbles: true,
-      composed: true,
-    }));
-  }
-
   private computeAlwaysFloatLabel() {
     if (this.alwaysFloatLabel) {
       return true;
     }
 
     return (
-        (this.selectedValues && this.selectedValues.length > 0)
+        this.hasSelectedValues()
         || this.inputValue
         || this.inputFocused
     );
@@ -327,17 +335,31 @@ export class TokenInputElement extends LitElement {
   }
 
   private validate(): void {
-    console.log(this.required, this.selectedValues, this.selectedValues.length > 0);
-    this.invalid = this.required && !this.hasSelectedValues();
+    this.invalid =
+        this.required
+        && !this.hasSelectedValues();
   }
 
   private hasSelectedValues(): boolean {
     return this.selectedValues && this.selectedValues.length > 0;
   }
 
-  /////////////////////////
-  /// LIT ELEMENT LIFECYCLE
-  /////////////////////////
+  private getSelectedItems(): SelectedItem[] {
+    if (!this.listBoxNode) return [];
+
+    return this.listBoxNode!.items!
+        .map((item: HTMLElement) => {
+          return {
+            id: this.getPaperItemValue(item),
+            text: (this.selectedItemSelector ? item.querySelector(this.selectedItemSelector)!.textContent : item.textContent) || '',
+          };
+        })
+        .filter((item: { id: SelectedValue; text: string }) => this.selectedValues.includes(item.id));
+  }
+
+  /** END OF HELPERS */
+
+  /** LIT ELEMENT LIFECYCLE */
 
   public disconnectedCallback(): void {
     super.disconnectedCallback();
@@ -351,8 +373,7 @@ export class TokenInputElement extends LitElement {
 
   protected update(changedProperties: PropertyValues): void {
     if (changedProperties.has('selectedValues') && this.attrForSelected) {
-      console.log('update', this.selectedValues, changedProperties.get('selectedValues'));
-      this.selectedValues = this.selectedValues.map(value => value.toString());
+      this.selectedValues = this.selectedValues.map(value => (value || '').toString());
     }
 
     super.update(changedProperties);
@@ -374,19 +395,6 @@ export class TokenInputElement extends LitElement {
     if (this.autoValidate) {
       window.addEventListener('click', this.onWindowClick);
     }
-  }
-
-  private getSelectedItems() {
-    if (!this.listBoxNode) return [];
-
-    return this.listBoxNode!.items!
-        .map((item: HTMLElement) => {
-          return {
-            id: this.getPaperItemValue(item),
-            text: this.selectedItemSelector ? item.querySelector(this.selectedItemSelector)!.textContent : item.textContent,
-          };
-        })
-        .filter((item: { id: any; text: any }) => this.selectedValues.includes(item.id));
   }
 
   protected render() {
