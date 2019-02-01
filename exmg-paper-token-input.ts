@@ -48,7 +48,7 @@ type SelectedItem = {
  * `--exmg-paper-token-input-badge-text-color` | Menu foreground color | `white`
  */
 @customElement('exmg-paper-token-input')
-export class TokenInputElement extends LitElement {
+export class PaperTokenInputElement extends LitElement {
   /**
    * If you want to use an attribute value or property of an element for
    * `selected` instead of the index, set this to the name of the attribute
@@ -271,7 +271,7 @@ export class TokenInputElement extends LitElement {
   /** HELPERS */
 
   private emitItemSelectEvent(value: SelectedValue): void {
-    this.dispatchEvent(new CustomEvent('value-select', {
+    this.dispatchEvent(new CustomEvent('exmg-token-input-select', {
       detail: {
         value,
       },
@@ -281,7 +281,7 @@ export class TokenInputElement extends LitElement {
   }
 
   private emitItemDeselectEvent(value: SelectedValue): void {
-    this.dispatchEvent(new CustomEvent('value-deselect', {
+    this.dispatchEvent(new CustomEvent('exmg-token-input-deselect', {
       detail: {
         value,
       },
@@ -364,7 +364,7 @@ export class TokenInputElement extends LitElement {
   public disconnectedCallback(): void {
     super.disconnectedCallback();
 
-    this.inputValueNode!.removeEventListener('keydown', this.onIronInputKeyDown);
+    this.inputValueNode && this.inputValueNode.removeEventListener('keydown', this.onIronInputKeyDown);
 
     if (this.autoValidate) {
       window.removeEventListener('click', this.onWindowClick);

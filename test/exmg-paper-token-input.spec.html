@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>exmg-paper-token-input test</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/web-animations-js/web-animations-next-lite.min.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+  <script type="module" src="../exmg-paper-token-input.js"></script>
+</head>
+<body>
+  <test-fixture id="ExmgPaperTokenInputBasicElement">
+    <template>
+      <exmg-paper-token-input></exmg-paper-token-input>
+    </template>
+  </test-fixture>
+  <test-fixture id="ExmgPaperTokenInputList">
+    <template>
+      <exmg-paper-token-input label="Creatives" selected="1" required>
+        <paper-item>Rubin</paper-item>
+        <paper-item>Gennie</paper-item>
+        <paper-item>Ronna</paper-item>
+        <paper-item>Jacquie</paper-item>
+        <paper-item>Norene</paper-item>
+        <paper-item>Beatris</paper-item>
+        <paper-item>Ginny</paper-item>
+        <paper-item>Tiesha</paper-item>
+        <paper-item>Leonore</paper-item>
+        <paper-item>Evonne</paper-item>
+      </exmg-paper-token-input>
+    </template>
+  </test-fixture>
+  <test-fixture id="ExmgPaperTokenInputListWithSelection">
+    <template>
+      <exmg-paper-token-input label="Creatives" selected="6007" attr-for-selected="data-id" required>
+        <paper-item data-id="1001">Rubin</paper-item>
+        <paper-item data-id="1012">Gennie</paper-item>
+        <paper-item data-id="1403">Ronna</paper-item>
+        <paper-item data-id="1004">Jacquie</paper-item>
+        <paper-item data-id="3035">Norene</paper-item>
+        <paper-item data-id="3006">Beatris</paper-item>
+        <paper-item data-id="6007">Ginny</paper-item>
+        <paper-item data-id="14408">Tiesha</paper-item>
+        <paper-item data-id="4309">Leonore</paper-item>
+        <paper-item data-id="4010">Evonne</paper-item>
+      </exmg-paper-token-input>
+    </template>
+  </test-fixture>
+  <test-fixture id="ExmgPaperTokenInputRequired">
+    <template>
+      <exmg-paper-token-input label="Select Users" required auto-validate error-message="Input required">
+        <paper-item>Rubin</paper-item>
+        <paper-item>Gennie</paper-item>
+        <paper-item>Ronna</paper-item>
+      </exmg-paper-token-input>
+    </template>
+  </test-fixture>
+  <test-fixture id="ExmgPaperTokenInputDisabled">
+    <template>
+      <exmg-paper-token-input label="Select Users" disabled>
+        <paper-item>Rubin</paper-item>
+        <paper-item>Gennie</paper-item>
+        <paper-item>Ronna</paper-item>
+      </exmg-paper-token-input>
+    </template>
+  </test-fixture>
+  <script type="module" src="exmg-paper-token-input.spec.js"></script>
+</body>
+</html>

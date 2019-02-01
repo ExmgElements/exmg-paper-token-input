@@ -1,29 +1,18 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <script>
-    window.WCT = {
-      environmentScripts: [
-        'stacky/browser.js',
-        'async/dist/async.js',
-        'wct-browser-legacy/node_modules/lodash/index.js',
-        'mocha/mocha.js',
-        'chai/chai.js',
-        '@polymer/sinonjs/sinon.js',
-        'sinon-chai/lib/sinon-chai.js',
-        'accessibility-developer-tools/dist/js/axs_testing.js',
-        '@polymer/test-fixture/test-fixture.js'
-      ]
-    };
-  </script>
-  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+ <title>Exmg-paper-token-input tests</title>
+
+ <script src="../node_modules/mocha/mocha.js"></script>
+ <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 </head>
 <body>
-  <script>
-    WCT.loadSuites([
-      'exmg-paper-token-input.html',
-    ]);
-  </script>
+ <script>
+   WCT.loadSuites([
+     'exmg-paper-token-input.spec.html',
+   ]);
+ </script>
 </body>
 </html>
