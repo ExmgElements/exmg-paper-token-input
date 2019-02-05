@@ -151,6 +151,8 @@ export class PaperTokenInputElement extends LitElement {
   @query('#menu')
   private menuElement?: PaperMenuButton;
 
+  private previousClickWasInside: boolean = false;
+
   constructor() {
     super();
     this.onIronInputKeyDown = this.onIronInputKeyDown.bind(this);
@@ -168,8 +170,6 @@ export class PaperTokenInputElement extends LitElement {
   }
 
   /** EVENT HANDLERS */
-
-  private previousClickWasInside: boolean = false;
 
   private onWindowClick(e: MouseEvent): void {
     const isInsideClick = !!e.composedPath().find((path) => path === this);

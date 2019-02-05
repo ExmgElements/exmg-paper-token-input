@@ -4,5 +4,10 @@
   ],
   "rules": {
     "ter-prefer-arrow-callback": [false]
+  },
+  "linterOptions": {
+    "exclude": [
+      "../*.ts"
+    ]
   }
 }

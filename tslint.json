@@ -2,7 +2,9 @@
   "extends": [
     "tslint-config-exmg"
   ],
-  "rules": {
-    "ter-prefer-arrow-callback": [false]
+  "linterOptions": {
+    "exclude": [
+      "test/**/*.ts"
+    ]
   }
 }
