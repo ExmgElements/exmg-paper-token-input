@@ -195,7 +195,7 @@ export class PaperTokenInputElement extends LitElement {
         this.listBoxNode!.focus();
         break;
       case ESCAPE:
-      case 'Esc':
+      case 'Escape':
         break;
       default:
         this.menuElement!.open();
