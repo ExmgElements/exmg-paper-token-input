@@ -154,17 +154,7 @@ export class PaperTokenInputElement extends LitElement {
   constructor() {
     super();
     this.onIronInputKeyDown = this.onIronInputKeyDown.bind(this);
-    this.onIronInputValueChanged = this.onIronInputValueChanged.bind(this);
     this.onWindowClick = this.onWindowClick.bind(this);
-    this.onPaperListBoxItemSelect = this.onPaperListBoxItemSelect.bind(this);
-    this.onPaperListBoxItemDeselect = this.onPaperListBoxItemDeselect.bind(this);
-    this.onInputContainerTap = this.onInputContainerTap.bind(this);
-    this.onInputFocusChanged = this.onInputFocusChanged.bind(this);
-    this.onInputContainerButtonTap = this.onInputContainerButtonTap.bind(this);
-    this.onPaperMenuVisibilityChanged = this.onPaperMenuVisibilityChanged.bind(this);
-
-    this.resetInput = this.resetInput.bind(this);
-    this.computeAlwaysFloatLabel = this.computeAlwaysFloatLabel.bind(this);
   }
 
   private indexOfItem(item: HTMLElement): number {
