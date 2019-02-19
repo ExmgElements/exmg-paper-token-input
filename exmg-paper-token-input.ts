@@ -373,7 +373,7 @@ export class PaperTokenInputElement extends LitElement {
 
   protected update(changedProperties: PropertyValues): void {
     if (changedProperties.has('selectedValues') && this.attrForSelected) {
-      this.selectedValues = this.selectedValues.map(value => (value || '').toString());
+      this.selectedValues = this.selectedValues.map(value => (typeof value === 'number') ? value.toString() : (value || '').toString());
     }
 
     super.update(changedProperties);
