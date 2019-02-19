@@ -328,10 +328,12 @@ export class PaperTokenInputElement extends LitElement {
     this.focusInputValue();
   }
 
-  public validate(): void {
+  public validate(): boolean {
     this.invalid =
         this.required
         && !this.hasSelectedValues();
+
+    return !this.invalid;
   }
 
   private hasSelectedValues(): boolean {
