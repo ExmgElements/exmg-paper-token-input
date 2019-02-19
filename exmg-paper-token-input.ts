@@ -75,13 +75,16 @@ export class PaperTokenInputElement extends LitElement {
    * Gets or sets the selected elements.
    */
   @property({type: Array, attribute: 'selected-values'})
-  public selectedValues: SelectedValue[] = []; // @todo migrate notify: true
+  public selectedValues: SelectedValue[] = [];
 
   /**
    * The label for this input.
    */
   @property({type: String})
   public label?: string;
+
+  @property({type: String})
+  public name?: string;
 
   /**
    * Set to true to auto-validate the input value.
@@ -167,6 +170,14 @@ export class PaperTokenInputElement extends LitElement {
     return this.listBoxNode!.items!
         .map((item: HTMLElement) => this.getPaperItemValue(item))
         .indexOf(value);
+  }
+
+  private getStringSelectedValues(): string[] {
+    return this.selectedValues.map(value => (typeof value === 'number') ? value.toString() : (value || '').toString());
+  }
+
+  get value() {
+    return this.getStringSelectedValues();
   }
 
   /** EVENT HANDLERS */
@@ -373,7 +384,7 @@ export class PaperTokenInputElement extends LitElement {
 
   protected update(changedProperties: PropertyValues): void {
     if (changedProperties.has('selectedValues') && this.attrForSelected) {
-      this.selectedValues = this.selectedValues.map(value => (typeof value === 'number') ? value.toString() : (value || '').toString());
+      this.selectedValues = this.getStringSelectedValues();
     }
 
     super.update(changedProperties);
