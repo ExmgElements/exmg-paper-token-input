@@ -177,7 +177,11 @@ export class PaperTokenInputElement extends LitElement {
   }
 
   get value() {
-    return this.getStringSelectedValues();
+    return [...this.selectedValues];
+  }
+
+  set value(value) {
+    this.selectedValues = [...value];
   }
 
   /** EVENT HANDLERS */
