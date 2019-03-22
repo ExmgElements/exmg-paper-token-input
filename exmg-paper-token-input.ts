@@ -198,8 +198,6 @@ export class PaperTokenInputElement extends LitElement {
   }
 
   private onIronInputKeyDown(e: KeyboardEvent): void {
-    console.log(e.code);
-    console.log(e.keyCode);
     switch (e.code || e.keyCode) {
       case BACKSPACE:
       case 'Backspace':
