@@ -15,6 +15,7 @@ import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button';
 import {PaperListboxElement} from '@polymer/paper-listbox/paper-listbox';
 
 const BACKSPACE = 8;
+const TAB = 9;
 const ESCAPE = 27;
 const ARROWDOWN = 40;
 
@@ -197,6 +198,8 @@ export class PaperTokenInputElement extends LitElement {
   }
 
   private onIronInputKeyDown(e: KeyboardEvent): void {
+    console.log(e.code);
+    console.log(e.keyCode);
     switch (e.code || e.keyCode) {
       case BACKSPACE:
       case 'Backspace':
@@ -211,6 +214,8 @@ export class PaperTokenInputElement extends LitElement {
         break;
       case ESCAPE:
       case 'Escape':
+      case TAB:
+      case 'Tab':
         break;
       default:
         this.menuElement!.open();
