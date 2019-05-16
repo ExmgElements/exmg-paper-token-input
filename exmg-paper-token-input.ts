@@ -530,6 +530,7 @@ export class PaperTokenInputElement extends LitElement {
         @opened-changed="${this.onPaperMenuVisibilityChanged}"
         vertical-offset="60"
         horizontal-align="right"
+        dynamic-align="true"
         restore-focus-on-close=""
         ?disabled="${this.disabled}"
       >
