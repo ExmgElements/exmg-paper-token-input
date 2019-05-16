@@ -201,7 +201,12 @@ export class PaperTokenInputElement extends LitElement {
     switch (e.code || e.keyCode) {
       case BACKSPACE:
       case 'Backspace':
-        this.listBoxNode!.selectIndex(this.indexOfValue(this.selectedValues[this.selectedValues.length - 1]));
+        const isRemoveListItem = !this.inputValue;
+
+        if (isRemoveListItem) {
+          this.listBoxNode!.selectIndex(this.indexOfValue(this.selectedValues[this.selectedValues.length - 1]));
+        }
+
         this.requestUpdate();
         this.focusInputValue();
         break;
