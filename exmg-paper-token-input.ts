@@ -431,6 +431,7 @@ export class PaperTokenInputElement extends LitElement {
 
         paper-input-container {
           @apply --layout-flex;
+          overflow: auto;
         }
 
         .tokens {
@@ -438,6 +439,7 @@ export class PaperTokenInputElement extends LitElement {
           min-height: 24px;
           position: relative;
           width: 100%;
+          white-space: nowrap;
         }
 
         .tokens paper-button {
@@ -482,6 +484,11 @@ export class PaperTokenInputElement extends LitElement {
         .container {
           @apply --layout-flex;
         }
+
+        iron-input {
+          width: 1.8rem;
+        }
+
       </style>
 
       <paper-input-container
