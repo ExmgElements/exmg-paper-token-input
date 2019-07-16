@@ -1,3 +1,5 @@
+#### ⚠️ Project no longer maintened here, please find this package under the [exmg-elements-monorepo](https://github.com/ExmgElements/exmg-elements-monorepo/tree/master/packages/exmg-paper-token-input) ⚠️ ####
+
 # exmg-paper-token-input
 
 Paper style token input element. Please visit the [API Documentation and demo](http://exmgelements.github.io/exmg-paper-token-input/) page for more information.
